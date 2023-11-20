@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>게시물 목록 보기</title>
+<link rel="stylesheet" href="/css/board.css">
+<script src="/js/getCookie.js"></script>
+<script>
+window.addEventListener('message', (event) => {
+    if (event.data === 'pwLogout') {
+    	pwdLogout();
+    }
+});
+
+const pwdLogout = () => {
+	
+	alert('비밀번호가 변경되어 로그아웃 됩니다.');
+		 
+	let authkey = getCookie('authkey');
+	if(authkey != undefined)
+		document.cookie = 'authkey=' + authkey + ";path=/;max-age=0";
+	
+	document.location.href='/member/logout';
+	
+	
+}
+
+const search = () => {
+	const keyword = document.querySelector('#keyword');
+	document.location.href='/board/list?page=1&keyword=' + keyword.value;
+}
+
+const press = () => {
+	if(event.keyCode == 13) search();
+}
+
+const logout = () => {
+	if(confirm('로그아웃하시겠습니까?')){
+		
+		let authkey = getCookie('authkey');
+		if(authkey != undefined)
+			document.cookie = 'authkey=' + authkey + ";path=/;max-age=0";
+		
+		document.location.href='/member/logout';	
+	}
+	
+}
+window.onload = () => {
+  	/*
+    //* /const pwStatus = '[[${session.pwStatus}]]';
+    const pwday = parseInt('[[${session.pwcheck}]]')*30;
+    const lastpwdate = '[[${session.lastpwdate}]]'
+    
+    const newDate = new Date(lastpwdate);
+    newDate.setDate(newDate.getDate() + pwday);
+
+    // 오늘 날짜를 가져와서 비교합니다.
+    const today = new Date();
+    
+    console.log('newDate.toDateString() : ' + newDate.toDateString());
+    console.log('today.toDateString() : ' + today.toDateString());
+    // 날짜가 같은지 비교합니다.
+     if (newDate.toDateString() <= today.toDateString()) {
+       //	window.confirm( '[[${session.username}]]님. 비밀번호를 변경한지 ' + pwcheck*30 + '일이 지났습니다. 비밀번호를 변경하시겠습니까?');
+       	alert('[[${session.username}]]님.! 비밀번호를 변경한지 ' + pwday + '일이 지났습니다. 비밀번호를 변경하여 주십시오');
+       	window.open(
+       			"/member/pwCheckNotice",	
+       			"비밀번호 변경",
+       			"width=950, height=540, top=50, left=50"
+       		);	
+        
+    }  */
+    
+}
+</script>
+
+</head>
+
+<body>
+<script>
+	const userid = '[[${session.userid}]]'; 
+	if(userid == '' || userid == undefined ) {
+		document.location.href='/';
+	}
+	
+</script>
+    <div class="main">
+        <img src="/images/logo.png" id="topBanner"><br>
+        <h1 style="text-align: center;">게시물 목록</h1>
+        <input type="text" name="keyword" id="keyword" 
+         		style="width:35%;height:30px;border:2px solid #168;font-size: 16px"
+         		placeholder="검색할 제목, 작성자이름 및 내용을 입력하세요." onkeydown="press()">
+        <input type="button" value="검색" 
+             style="width:5%;height:30px;background:#158;color:white;font-weight:bold;cursor:pointer;"
+             	onclick="search()">		
+		 <br><br>
+        <table class="InfoTable">
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>작성일</th>
+                <th>조회수</th>
+            </tr>
+            <th:block th:if="${list != null}">     
+	            <tr th:each="list,index:${list}" 
+	            	onMouseover="this.style.background='#46D2D2'" 
+	            	onMouseout="this.style.background='white'">
+	                <td th:text="${totalElement-(page-1)*postNum - index.count +1} "></td>
+	                <td style="text-align: left;">
+	                	<a th:href="@{'/board/view?seqno=' + ${list.seqno} + '&page=' + 
+	                			${page} + '&keyword=' + ${keyword} }" 
+	                   		onMouseover="this.style.textDecoration='underline'" 
+	                   		onMouseout="this.style.textDecoration='none'">
+	                   		<span th:text="${list.title}"></span>
+	                   	</a>
+	                </td>
+	                <td th:text="${list.writer}"></td>
+	                <td th:text="${list.regdate}"></td>	                	
+	                <td th:text="${list.hitno}"></td>
+	            </tr>
+			</th:block>
+			<th:block th:if="${list == null}">
+				<td colspan="5">등록된 게시물이 없습니다.</td>
+			</th:block>
+        </table>  
+        <br>
+		  <div>[(${pageList})]</div>
+		  <br>
+        <div class="bottom_menu">
+        	<a href="/board/list?page=1">처음으로</a>&nbsp;&nbsp;
+          <a href="/board/write">글쓰기</a>&nbsp;&nbsp;
+          <a href="/member/memberInfo">사용자관리</a>&nbsp;&nbsp;
+          <th:block th:if="${session.role == 'MASTER'}">
+          	<a href="/master/sysManager">시스템관리</a>&nbsp;&nbsp;
+          </th:block>
+          
+          <a href="javascript:logout()">로그아웃</a>&nbsp;&nbsp;
+        </div>
+        <br><br>
+
+    </div>    
+    
+</body>
+
+</html>

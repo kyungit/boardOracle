@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>파일 삭제</title>
+<link rel="stylesheet" href="/css/board.css">
+</head>
+<style>
+body{
+	margin-top: 100px;
+	background-color:#EFF5FB;
+}
+
+</style>
+<script>
+const deleteFile = async () => {
+		
+	alert('파일이 삭제됩니다.');
+	await fetch('/master/fileDelete', {
+		method: 'POST'
+	}).then((response)=> response.json())
+	.then((data)=> {
+		if(data.status === 'GOOD'){
+			alert("파일이 삭제되었습니다.");
+			//document.location.href='/master/sysManager';
+		}
+	}).catch((error)=> {
+		alert("시스템 장애로 게시물 등록이 실패했습니다.");
+		console.log("error" + error);
+	})
+}
+
+</script>
+
+<body>
+<div class="main">
+        <img src="/images/logo.png" id="topBanner"><br>
+        <h1 style="text-align: center;"> < 회원 목록 > </h1>
+        <th:block th:if="${fileCount == 0}">
+        	<span><h2>삭제할 파일이 없습니다.</h2></span>
+        </th:block>
+        <th:block th:if="${fileCount != 0}">
+        <span><h2>삭제할 파일 수는 [[${fileCount}]] 개 입니다.</h2></span>
+        <p style="color:red">삭제 버튼을 클릭 시 해당 파일이 삭제됩니다.</p><br>
+        <input type="button" class="bottom_input" value="파일 삭제"  onclick="deleteFile()">
+        </th:block>
+		 <br> <br>
+        <table class="InfoTableMaster">
+        
+            <tr>
+               <!--  <th>번호</th> -->
+                <th>파일명</th>
+                <th>파일 사이즈</th>
+                <th>업로드 아이디</th>
+                
+            </tr>
+         <th:block th:if="${file != null}">     
+	           <tr th:each="file,index:${file}" 
+	            	onMouseover="this.style.background='#46D2D2'" 
+	            	onMouseout="this.style.background='none'">
+	                <!-- <td th:text="${totalElement-(page-1)*postNum - index.count +1} "></td>
+	                <td style="text-align: left;">
+	                	<a th:href="@{'/board/view?seqno=' + ${list.seqno} + '&page=' + 
+	                			${page} + '&keyword=' + ${keyword} }" 
+	                   		onMouseover="this.style.textDecoration='underline'" 
+	                   		onMouseout="this.style.textDecoration='none'">
+	                   		<span th:text="${list.title}"></span>
+	                   	</a>
+	                </td> -->
+	               <td th:text="${file.org_filename}"></td>
+	                <td th:text="${file.filesize}"></td>	                	
+	                <td th:text="${file.userid}"></td>
+	            </tr>
+			</th:block>
+			<th:block th:if="${fileCount == 0}">
+				<td colspan="3">삭제할 파일이 없습니다.</td>
+			</th:block>
+        </table>  
+        <br>
+		<!--   <div>[(${pageList})]</div> -->
+		  <br>
+        
+        <br><br>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>게시물 통계</title>
+<link rel="stylesheet" href="/css/board.css">
+</head>
+<style>
+body{
+	margin-top: 100px;
+	background-color:#EFF5FB;
+}
+
+
+</style>
+<body>
+<div class="main">
+        <img src="/images/logo.png" id="topBanner"><br>
+        <h1 style="text-align: center;"> < 회원 목록 > </h1>
+        <span><h1>총 회원 수는 [[${totalElement}]] 명 입니다.</h1></span>
+	        
+       <div class="bottom_menu">
+        	<a href="/master/sysMember">회원 관리</a>
+        	<a href="#" onclick="statsMember('')">전체 조회</a>
+          
+        </div>
+           <br>
+        <input type="text" name="keyword" id="keyword" 
+         		style="width:35%;height:30px;border:2px solid #168;font-size: 16px"
+         		placeholder="검색할 회원 이름 및 아이디를 입력하세요." onkeydown="memberPress()">
+        <input type="button" value="검색" 
+             style="width:5%;height:30px;background:#158;color:white;font-weight:bold;cursor:pointer;"
+             	onclick="memberSearch()">		
+		 <br><br>
+		 
+        <table class="InfoTableMaster">
+        
+            <tr>
+                <th>활동 순위</th>
+                <th>아이디</th>
+                <th>이름</th>
+                <th>총 합</th>
+                <th>작성 게시글 수</th>
+                <th>작성 댓글 수</th>
+            </tr>
+          <th:block th:if="${stats!= null}">     
+	            <tr th:each="stats,index:${stats}" 
+	            	onMouseover="this.style.background='#46D2D2'" 
+	            	onMouseout="this.style.background='none'">
+	            	<td th:text="${stats.seq}"></td>
+	                <td th:text="${stats.userid}"></td>
+	                <td th:text="${stats.username}"></td>	 
+	                <td th:text="${stats.stats}"></td>	 
+	                <td th:text="${stats.board}"></td>	                 	
+	                <td th:text="${stats.reply}"></td>
+	            </tr>
+			</th:block>
+			<th:block th:if="${stats == null or #lists.isEmpty(stats)}">
+				<td colspan="6">등록된 게시물이 없습니다.</td>
+			</th:block>
+        </table>  
+        <br>
+		  <div>[(${pageList})]</div>
+		  <br>
+        <span th:if="${not #strings.isEmpty(keyword)}">
+		    	<h4 style="color:red">'[[${keyword}]]'이/가 포함된 회원은 [[${searchCount}]] 명 입니다.</h4>
+			</span>
+     
+
+    </div>
+</body>
+</html>

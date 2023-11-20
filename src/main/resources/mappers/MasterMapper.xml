@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.board.mapper.MasterMapper">
+
+
+<!-- 회원 조회 -->
+
+<select id="allMember" parameterType="HashMap" resultType="com.board.dto.MemberDTO">
+	select seq, userid, username, telno, regdate from 
+		(select row_number() over (order by userid desc) as seq,userid, username, telno
+		,to_char(regdate, 'YYYY-MM-DD HH24:MI:SS') as regdate from tbl_member
+         where userid like '%'||#{keyword}||'%' or username like '%'||#{keyword}||'%')
+  where seq between #{startPoint} and #{endPoint}	
+</select>
+
+
+<!-- 전체 회원 수 계산 -->
+<select id="allMemberCount" resultType="int">
+	select count(*) from tbl_member	
+</select>
+
+
+
+<!-- 검색 회원 수 계산 -->
+<select id="allMemberSearchCount" parameterType="String" resultType="int">
+	select count(*) from tbl_member
+	where userid like '%'||#{keyword}||'%' or username like '%'||#{keyword}||'%'
+ 
+</select>
+
+
+
+
+<!-- 전체 게시물 목록 보기 -->
+<select id="list" parameterType="HashMap" resultType="com.board.dto.BoardDTO">
+	select seq, seqno, title, writer, regdate,hitno from 
+		(select row_number() over (order by seqno desc) as seq,seqno, title,
+		 writer, hitno,to_char(regdate, 'YYYY-MM-DD HH24:MI:SS') as regdate from tbl_board 
+         where title like '%'||#{keyword}||'%' or writer like '%'||#{keyword}||'%' or 
+         content like '%'||#{keyword}||'%' or userid like '%'||#{keyword}||'%'  )
+   			where seq between #{startPoint} and #{endPoint}	
+</select>
+
+
+<!-- 전체 게시물 갯수 계산 -->
+<select id="getTotalCountByMember" parameterType="string" resultType="int">
+	select count(*) from tbl_board where writer like '%'||#{keyword}||'%' or 
+		title like '%'||#{keyword}||'%' or content like '%'||#{keyword}||'%' or userid like '%'||#{keyword}||'%' 		
+</select>
+
+
+<!-- 전체 게시글 수 -->
+<select id="getTotalCount" resultType="int">
+	select count(*) from tbl_board
+</select>
+
+
+
+
+
+
+
+<!-- 댓글 목록 보기 -->
+<select id="replyList" parameterType="HashMap" resultType="com.board.dto.ReplyDTO">
+	select seq, replyseqno, seqno, replywriter, replyregdate, replycontent,userid from 
+		(select row_number() over (order by seqno desc) as seq,replyseqno, seqno, replywriter
+		,to_char(replyregdate, 'YYYY-MM-DD HH24:MI:SS') as replyregdate, replycontent,userid from tbl_reply 
+         where replywriter like '%'||#{keyword}||'%' or 
+	replycontent like '%'||#{keyword}||'%'	or userid like '%'||#{keyword}||'%'	)
+   where seq between #{startPoint} and #{endPoint}	
+</select>
+
+
+<!-- 댓글 갯수 계산(멤버별) -->
+<select id="getTotalReplyCountByMember" parameterType="string" resultType="int">
+	select count(*) from tbl_reply where replywriter like '%'||#{keyword}||'%' or 
+	replycontent like '%'||#{keyword}||'%'	or userid like '%'||#{keyword}||'%'	
+</select>
+
+
+<!-- 전체 댓글 수 -->
+<select id="getTotalReplyCount" resultType="int">
+	select count(*) from tbl_reply
+</select>
+
+
+
+
+<!-- 첨부파일 삭제 목록 조회-->
+<select id="checkfileXSearch" resultType="com.board.dto.FileDTO">
+	select * from tbl_file where checkfile='N'
+</select>
+
+<!-- 첨부파일 삭제 -->
+<select id="checkfileDelete">
+	delete from tbl_file where checkfile='N'
+</select>
+
+
+
+<!-- 게시물 통계(멤버별 게시물) -->
+<select id="statsBoard" parameterType="String" resultType="com.board.dto.StatsDTO">
+select  userid, username, stats,seq
+  from (
+    select row_number() over (order by count(seqno) desc) as seq, A.userid, A.username, count(seqno) as stats
+    from tbl_member A left outer join tbl_board B on A.userid=B.userid
+    group by A.userid, A.username
+    order by seq
+  )
+where userid like '%'||#{keyword}||'%' or username like '%'||#{keyword}||'%'
+</select> 
+
+<!-- 댓글 통계(멤버별 댓글) -->
+<select id="statsReply" parameterType="String" resultType="com.board.dto.StatsDTO">
+select * from (
+	select row_number() over (order by count(replyseqno) desc) as seq, A.userid, A.username, count(replyseqno) as stats
+	from tbl_member A left outer join tbl_reply B on A.userid=B.userid
+	group by A.userid,A.username
+	order by seq
+	)
+where userid like '%'||#{keyword}||'%' or username like '%'||#{keyword}||'%'
+</select>
+
+<!-- 회원 통계(회원별 총 댓글+게시글+합계) -->
+<select id="statsMember" parameterType="String" resultType="com.board.dto.StatsDTO">
+select * from (
+select row_number() over (order by count(distinct B.seqno)+count(distinct C.replyseqno) desc) as seq, A.userid,A.username, count(distinct B.seqno) as board, count(distinct C.replyseqno) as reply, count(distinct B.seqno)+count(distinct C.replyseqno) as stats
+from tbl_member A left outer join tbl_board B ON A.userid = B.userid
+left outer join tbl_reply C ON A.userid = C.userid
+group by A.userid, A.username
+order by stats desc)
+where userid like '%'||#{keyword}||'%' or username like '%'||#{keyword}||'%'
+</select>
+
+
+
+<delete id="deleteBoardByMaster" parameterType="int">
+	delete from tbl_board where seqno=#{seqno}
+</delete>
+
+<update id="fileInfoUpdate" parameterType="int">
+	update tbl_file set checkfile='N' where seqno=#{seqno}
+</update>
+
+
+<delete id="deleteReplyByMaster" parameterType="int">
+	delete from tbl_reply where replyseqno=#{replyseqno}
+</delete>
+
+</mapper>
+

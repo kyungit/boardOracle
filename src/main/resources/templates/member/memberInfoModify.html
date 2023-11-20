@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>회원 기본 정보 수정</title>
+<link rel="stylesheet" href="/css/board.css">
+
+<style>
+.imageZone {
+	border: 2px solid #92AAB0;
+	width: 60%;
+	height: auto;
+	color: #92AAB0;
+	text-align: center;
+	vertical-align: middle;
+	margin: auto;
+	padding: 10px 10px;
+	font-size: 200%;
+}
+.addrSearch {
+	width: 80%;
+	border: none;
+	border-bottom: 2px solid #adadad;
+	margin: 5px;
+	padding: 10px 10px;
+	outline: none;
+	color: #636e72;
+	font-size: 16px;
+	height: 25px;
+	background: none;
+}
+
+</style>
+
+<script>
+window.onload = () => {
+	/* 
+	//DB에서 불러온 사진 불러오기
+	  const storedFilename = '[[${member.stored_filename}]]'; // 데이터베이스에서 가져온 저장된 파일명
+
+    const existingImgZone = document.getElementById('imageZone');
+
+    if (existingImgZone && storedFilename) {
+        // 이미지 경로 생성
+        const imagePath = '/profile/' + storedFilename;
+
+        // 이미지 엘리먼트 생성 및 설정
+        const imgElement = document.createElement('img');
+        imgElement.src = imagePath;
+        imgElement.style.width = '350px'; // 이미지 크기 조절 등의 스타일 설정
+
+        // 이미지를 표시할 엘리먼트에 추가
+        existingImgZone.appendChild(imgElement);
+    }
+     */
+	
+	//DB에서 불러온 성별 선택
+	const gender = '[[${member.gender}]]';
+	 // 'gender'라는 이름을 가진 모든 라디오 버튼을 선택합니다.
+   const genderRadios = document.querySelectorAll('input[name="gender"]');
+   
+   // 선택한 모든 라디오 버튼을 순회하면서
+   genderRadios.forEach(radio => {
+       // 만약 라디오 버튼의 값이 데이터베이스에서 가져온 성별 값과 일치한다면
+       if (radio.value === gender) {
+           // 해당 라디오 버튼을 선택상태로 설정합니다.
+           radio.checked = true;
+       }
+   });
+   
+   /* 
+   //DB 에서 불러온 취미 선택
+   const hobbiesString = '[[${member.hobby}]]'; // 데이터베이스에서 가져온 취미 값들을 ,로 구분된 문자열로 가정, 예: '음악감상,스포츠'
+   
+   // ,로 구분된 문자열을 배열로 변환
+   const hobbies = hobbiesString.split(',');
+
+   if (Array.isArray(hobbies)) {
+       // 'hobby'라는 이름을 가진 모든 체크박스들을 선택합니다.
+       const hobbyCheckboxes = document.querySelectorAll('input[name="hobby"]');
+
+       // 가져온 취미 값들을 순회하면서
+       hobbies.forEach(hobby => {
+           // 문자열 양 끝의 공백을 제거한 후, 해당 취미 값과 일치하는 체크박스를 찾아 선택합니다.
+           const trimmedHobby = hobby.trim();
+           const matchedCheckbox = Array.from(hobbyCheckboxes).find(checkbox => checkbox.value === trimmedHobby);
+           
+           if (matchedCheckbox) {
+               matchedCheckbox.checked = true;
+           }
+       });
+   }
+   
+   //DB에서 불러온 직업 선택
+   const jobValue = '[[${member.job}]]'; // 데이터베이스에서 가져온 직업 값
+
+   // 'job'라는 이름을 가진 <select> 엘리먼트를 선택합니다.
+   const jobSelect = document.querySelector('select[name="job"]');
+
+   if (jobSelect) {
+       // <option> 엘리먼트들을 순회하면서
+       Array.from(jobSelect.options).forEach(option => {
+           // 데이터베이스에서 가져온 직업 값과 일치하는 <option>을 선택합니다.
+           if (option.value === jobValue) {
+               option.selected = true;
+           }
+       });
+   }
+    */
+	
+	var imgCheck = "N";
+	var imgZone = document.querySelector('#imageZone');
+	var fileEvent = document.querySelector('#imageFile');
+	var newFileSelected = false;
+	
+	//imageZone 영역 클릭 시 파일이벤트 처리. 자바스크립트에선 이벤트 발생 시 이벤트 정보를 담고 있는 event(e)라는 객체를 자동 생성.
+	imgZone.addEventListener('click', (e)=> {
+		fileEvent.click(e); //사용자가 만든 UI를 통해 <input type="file">을 클릭하는 것과 같은 효과를 내게 됨.
+	});
+	
+	fileEvent.addEventListener('change', (e)=> {
+		newFileSelected = true;
+		const files = e.target.files;//선택한 파일 정보가 e.target.files(배열)에 저장
+		showImage(files); 
+	})
+	
+	const showImage = (files) => {
+		
+		imgZone.innerHTML = '';
+		const imgFile = files[0];
+		
+		if(imgFile.type.indexOf("image") < 0) {
+			alert("이미지 파일만 올려 주세요.");
+			return false;
+		}
+		
+		const reader = new FileReader(); //new 연산자를 통해서 FileReader 객체를 reader가 참조(상속)
+		reader.onload = function(event) { //reader.readAsDataURL(imgFile)로 이미지를 읽고 나서 해야 할 일
+			imgZone.innerHTML = "<img src=" + event.target.result + " id='uploadImg' style='width:350px;height:auto'>";
+		};
+		
+		reader.readAsDataURL(imgFile); //실제로 이미지 파일을 읽는 부분
+		imgCheck = "Y";		
+	}
+	
+	btnRegister.addEventListener('click',async ()=> {
+		
+		//유효성 검사
+	/* 	if(imgCheck == 'N') {
+			alert("프로필 이미지를 등록하세요");
+			return false;
+		}	 */	
+		
+		if(username.value == '') {
+			alert("이름을 입력하세요.");
+			username.focus();
+			return false;
+		}
+		
+		
+		
+		const gender = document.querySelectorAll('input[name=gender]:checked');
+		//const gender = document.getElementsByName('gender');
+		
+		let genderValue = '';
+		for(let i=0; i<gender.length; i++){
+			if(gender[i].checked === true)
+				genderValue = gender[i].value;
+		}
+		
+		const hobby = document.querySelectorAll('input[name=hobby]:checked'); //유사 배열
+		let hobbyArray = []; //ES6+ 문법
+		for(let i=0; i<hobby.length; i++){
+			hobbyArray.push(hobby[i].value);
+		}
+		const job = document.querySelector('select[name=job] option:checked');
+	
+		
+		if(hobbyArray.length == 0) {
+			alert("취미를 선택하세요");
+			return false;
+		}
+		if(job.value == 'all') {
+			alert("직업을 선택하세요");
+			return false;
+		}
+		
+		/* if(zipcode.value == ''){
+			alert("우편번호를 입력하세요");
+			zipcode.focus();
+			return false;
+		}
+		if(addr2.value == '') {
+			alert("상세 주소를 입력하세요");
+			addr2.focus();
+			return false;
+		}		
+		address.value = addr1.value + " " + addr2.value;
+		 */
+		 
+		if(zipcode.value !== '' && addr2.value == ''){
+			alert("상세 주소를 입력하세요");
+			addr2.focus();
+			return false;
+		}
+		
+		 if(zipcode.value !== '' && addr2.value !== ''){
+			 address.value = addr1.value + " " + addr2.value;
+		 }
+		 
+		 
+		if(telno.value == '') {
+			alert("전화번호를 입력하세요");
+			telno.focus();
+			return false;
+		}
+		const beforeTelno = telno.value;
+		const afterTelno = beforeTelno.replace(/\-/ig,"").replace(/\ /ig,"").trim();
+		telno.value = afterTelno;
+		
+		if(email.value == '') {
+			alert("이메일 주소를 입력하세요");
+			email.focus();
+			return false;
+		}
+		//숙제 -- 이메일 유효성 검사 로직 만들기
+		
+		if(description.value == '') {
+			alert("자기소개를 입력하세요");
+			description.focus();
+			return false;
+		}
+		
+		
+		const formData = new FormData(RegistryForm);
+		
+/* 
+        if (newFileSelected) {
+            // 새 파일이 선택된 경우, FormData에 포함시킵니다.
+            const files = fileEvent.files;
+            
+        } else {
+            // 새 파일이 선택되지 않은 경우, FormData에서 'fileUpload' 키를 제거합니다.
+            if (formData.has('fileUpload')) {
+       			 formData.delete('fileUpload');
+    		}
+        } */
+
+		
+		await fetch('/member/memberInfoModify', {
+			method: 'POST',
+			body: formData
+		}).then((response)=> response.json())
+			.then((data)=> {
+				if(data.status === 'GOOD'){
+					alert(decodeURI(data.username) + '님, 정보가 수정되었습니다.');
+					document.location.href='/member/memberInfo';
+				} else {
+					alert("서버 장애로 정보 수정에 실패했습니다.");
+				}
+		}).catch((error)=> {
+			console.lor("error = " + error);
+		});
+		
+		//document.RegistryForm.action = '/member/signup';
+		//document.RegistryForm.submit();
+	});	
+}
+
+const selectAll = (checkElement) => {	
+	
+	const checkboxes = document.getElementsByName('hobby');
+	checkboxes.forEach((checkbox) => {
+		checkbox.checked = checkElement.checked;
+	});	
+		
+	/*
+	if(document.getElementById('all').checked == true)
+		for(var i = 0; i<document.getElementsByName('hobby').length; i++)
+			document.getElementsByName('hobby')[i].checked = true;
+	if(document.getElementById('all').checked == false)
+		for(var i = 0; i<document.getElementsByName('hobby').length; i++)
+			document.getElementsByName('hobby')[i].checked = false;	
+	*/
+}
+
+const searchAddr = () => {
+	
+	if(addrSearch.value == '') {
+		alert("검색할 주소를 입력하세요");
+		addrSearch.focus();
+		return false;
+	}
+	
+	window.open(
+		"/member/addrSearch?page=1&addrSearch=" + addrSearch.value,	
+		"주소검색",
+		"width=950, height=540, top=50, left=50"
+	);	
+}
+
+const idCheck = async () => {
+	
+	const userid = document.querySelector("#userid");
+	
+	await fetch('/member/idCheck',{		
+		method: "POST",
+		body: userid.value,		
+	}).then((response) => response.text())
+	  .then((data) => {		     
+			const idCheckNotice = document.querySelector('#idCheckNotice');
+			if(data == 0)
+				idCheckNotice.innerHTML = "사용 가능한 아이디입니다.";
+			else {
+				idCheckNotice.innerHTML = "이미 사용중인 아이디입니다.";
+				//userid.value = '';
+				userid.focus();
+			}
+	  });
+	
+}
+
+
+const startupPage = () => {
+	
+}
+
+</script>
+
+</head>
+<body>
+<script>
+	const userid = '[[${session.userid}]]';
+	if(userid == '') {
+		document.location.href='/';
+	}
+	
+</script>
+<div class="main">
+	
+	<h1>회원 기본 정보 변경</h1><br>
+	<!-- 성별/취미/직업 선택되어있어야 함. -->
+	<div class="WriteForm">
+		<form id="RegistryForm" name="RegistryForm" method="POST" enctype="multipart/form-data">
+		<br><br>
+			<span style="color:red">이미지 수정을 원하시면 사진을 클릭해 주세요.</span>
+			<input type="file" name="fileUpload" id="imageFile" style="display:none" />
+			<div class="imageZone" id="imageZone"><img th:src="@{'/profile/'+ ${member.stored_filename}}" style='width:300px; height:auto;'></div>
+			<!-- <div class="imageZone" id="imageZone"><img th:src="@{'/profile' + ${member.stored_filename}}"></div> -->
+			<!-- <input type="text" class="input_field" id="userid" name="userid" placeholder="여기에 아이디를 입력해 주세요" onchange="idCheck()"> -->
+			<br><span id="idCheckNotice"></span>
+			
+			<input type="text" class="input_field" id="username" name="username" th:value="${member.username}">
+			<div style="width:90%; text-align:left; position:relative; left: 35px; border-bottom:2px solid #adadad; margin:10px; padding: 10px;">
+				성별 : 
+				<label><input type="radio" name="gender" value="남성" th:checked="${member.gender == '남성'}">남성</label>
+            <label><input type="radio" name="gender" value="여성" th:checked="${member.gender == '여성'}">여성</label><br>
+
+				취미 : 
+				<label><input type="checkbox" id="all" name="all" onclick="selectAll(this)">전체 선택</label>
+	            <label><input type="checkbox" name="hobby" value="음악감상" th:checked="${member.hobby.contains('음악감상')}">음악 감상</label>
+	            <label><input type="checkbox" name="hobby" value="영화보기" th:checked="${member.hobby.contains('영화보기')}">영화 보기</label>
+	            <label><input type="checkbox" name="hobby" value="스포츠" th:checked="${member.hobby.contains('스포츠')}">스포츠</label><br>
+
+				직업 : 
+				<select name="job">
+	                <option value="all" disabled selected>--아래 내용 중에서 선택--</option>
+	                <option value="회사원" th:selected="${member.job == '회사원'}">회사원</option>
+	                <option value="공무원" th:selected="${member.job == '공무원'}">공무원</option>
+	                <option value="자영업" th:selected="${member.job == '자영업'}">자영업</option>
+            	</select>
+
+				<br>
+			</div>
+			<input type="text" id="address" name="address" class="input_field" th:value="${member.address}" readonly><br>
+			<span style="color:red">주소 변경을 원하시면 검색해 주세요</span>
+			<input type="text" id="addrSearch" name="addrSearch" class="addrSearch" placeholder="주소를 검색합니다.">
+			<input type="button" id="btn_addSearch" class="btn_addrSearch" value="주소검색" onclick="searchAddr()">
+			<input type="text" id="zipcode" class="input_field" name="zipcode" placeholder="우편번호가 검색되어 입력됩니다." readonly>
+			<input type="text" id="addr1" class="input_field" name="addr1" placeholder="주소가 검색되어 입력됩니다." readonly>
+			<input type="text" id="addr2" class="input_field" name="addr2" placeholder="상세 주소를 입력하세요">
+			<input type="hidden" id="address" name="address">
+			<input type="text" id="telno" class="input_field" name="telno" th:value="${member.telno}">
+			<input type="text" id="email" class="input_field" name="email" th:value="${member.email}">
+			
+			<textarea class="input_content" id="description" cols="100" rows="500" name="description">[[${member.description}]]</textarea><br>
+			<input type="button" id="btnRegister" class="btn_write" value="수정">
+			<input type="button" class="btn_cancel" value="취소" onclick="history.back()">			
+		</form>
+		<br><br>
+	
+	</div>
+
+</div>
+<br><br>
+</body>
+</html>

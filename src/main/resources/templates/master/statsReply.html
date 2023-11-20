@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>댓글 관리</title>
+<link rel="stylesheet" href="/css/board.css">
+</head>
+<style>
+body{
+	margin-top: 100px;
+	background-color:#EFF5FB;
+}
+</style>
+<body>
+<div class="main">
+<div></div>
+        <img src="/images/logo.png" id="topBanner"><br>
+        <h1 style="text-align: center;"> < 댓글 통계 > </h1>
+        <span><h1>총 댓글 수는 [[${totalElement}]] 개 입니다.</h1></span>
+       	
+		<div class="bottom_menu">
+          	<a href="/master/sysReply">댓글 관리</a>&nbsp;&nbsp;
+         	<a href="#" onclick="statsReply('')">전체보기</a>&nbsp;&nbsp;
+        </div>
+        <br>
+        <input type="text" name="keyword" id="keyword" 
+         		style="width:35%;height:30px;border:2px solid #168;font-size: 16px"
+         		placeholder="검색할 회원 이름 및 아이디를 입력하세요." onkeydown="replyPress()">
+        <input type="button" value="검색" 
+             style="width:5%;height:30px;background:#158;color:white;font-weight:bold;cursor:pointer;"
+             	onclick="replySearch()">	
+        
+       
+		 <br><br>
+        <table class="InfoTableMaster">
+        
+            <tr>
+                <th>댓글 순위</th>
+                <th>아이디</th>
+                <th>이름</th>
+                <th>작성 댓글 수</th>
+            </tr>
+         <th:block th:if="${stats != null}">     
+	            <tr th:each="stats, index:${stats}" 
+	            	onMouseover="this.style.background='#46D2D2'" 
+	            	onMouseout="this.style.background='none'">
+	                <td th:text="${stats.seq}"></td>
+	              
+	                <td th:text="${stats.userid}"></td>
+	                <td th:text="${stats.username}"></td>	                	
+	                <td th:text="${stats.stats}"></td>
+	            </tr>
+			</th:block> 
+
+
+			<th:block th:if="${stats == null or #lists.isEmpty(stats)}">
+				<td colspan="5">등록된 게시물이 없습니다.</td>
+			</th:block>
+        </table>  
+        <br>
+		<span th:if="${not #strings.isEmpty(keyword)}">
+		    <h4 style="color:red">'[[${keyword}]]'이/가 포함된 회원은 [[${totalElement}]] 명 입니다.</h4>
+		</span>
+    
+
+    </div>
+</body>
+</html>

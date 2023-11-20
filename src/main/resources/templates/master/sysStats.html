@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>회원 통계</title>
+<link rel="stylesheet" href="/css/board.css">
+</head>
+<style>
+.boardView {
+  text-align:center;
+}
+.field {
+  width: 90%;
+  height:25px;
+  outline:none;
+  color: #636e72;
+  font-size:25px;
+  background: none;
+  border-bottom: 2px solid #adadad;
+  margin: 30px;
+  padding: 10px 10px;
+  line-height: 30px;
+} 
+
+body{
+	margin-top: 100px;
+	background-color:#EFF5FB;
+}
+</style>
+<body>
+<div class="main">
+		<img src="/images/logo.png" id="topBanner"><br>
+		<h1 style="text-align: center;">회원정보 보기</h1>
+		<br>
+		<div class="boardView">
+			<div style="width:70%;height:auto;margin:auto;padding:20px;border:none;">
+				<!-- <img th:src="@{'/profile/' + ${memberInfo.stored_filename}}" style="display:block;width:80%;height:auto;margin:auto"> -->
+			</div>
+			<div class="field">총 회원수 : [[${allMember}]]</div>
+			<div class="field">총 게시글 수 : [[${allBoard}]]</div>
+			<div class="field">총 댓글 수 : [[${allReply}]]</div>
+			
+		</div>
+		<br>
+		<div class="bottom_menu">
+			<!-- <a href="/master/sysManager" >뒤로가기</a> &nbsp;&nbsp;
+			<th:block th:if="${memberInfo.userid == session.userid}">
+				<a href="/member/memberInfoModify">기본정보 변경</a> &nbsp;&nbsp;
+				<a href="/member/memberPasswordModify">패스워드 변경</a> &nbsp;&nbsp;
+				<a href="/member/memberDrop">회원탈퇴</a> &nbsp;&nbsp;
+			</th:block> -->
+			
+		</div>
+		
+</div>
+</body>
+</html>

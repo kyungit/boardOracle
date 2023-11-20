@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>패스워드 변경 여부 확인</title>
+<link rel="stylesheet" href="/css/board.css">
+<script src="/js/getCookie.js"></script>
+</head>
+<script>
+const passwordUpdate = async() => {
+	if(old_password.value == '') { alert("기존 패스워드를 입력하세요."); 
+		old_password.focus(); 
+		return false; 
+	}
+  	const Pass = new_password.value;
+	const Pass1 = new_password1.value;
+	if(Pass == '') { alert("신규 패스워드를 입력하세요."); new_password.focus(); return false; }
+	if(Pass1 == '') { alert("신규 패스워드를 입력하세요."); new_password1.focus(); return false; }
+	if(Pass != Pass1) 
+		{ alert("입력된 신규패스워드를 확인하세요"); new_password1.focus(); return false; }
+	
+	// 암호유효성 검사
+	let num = Pass.search(/[0-9]/g);
+ 	let eng = Pass.search(/[a-z]/ig);
+ 	let spe = Pass.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);	
+	if(Pass.length < 8 || Pass.length > 20) { alert("암호는 8자리 ~ 20자리 이내로 입력해주세요."); return false; }
+	else if(Pass.search(/\s/) != -1){ alert("암호는 공백 없이 입력해주세요."); return false; }
+	else if(num < 0 || eng < 0 || spe < 0 ){ alert("암호는 영문,숫자,특수문자를 혼합하여 입력해주세요."); return false; }
+	
+	if(Pass == old_password.value){
+		alert("새로운 비밀번호는 기존 비밀번호와 다른 비밀번호를 입력해주세요");
+		return false;
+	}
+  	
+	let formData = new FormData();
+	formData.append("old_password", old_password.value);
+	formData.append("new_password", new_password.value);
+	
+	await fetch('/member/memberPasswordModify?userid=[[${userid}]]',{
+		method: "POST",
+		body: formData
+	}).then((response) => response.json())
+		.then((data) => {
+			if(data.message === 'GOOD'){
+				alert("패스워드가 변경되었습니다.");
+				
+				logout();
+			}else if(data.message === 'PASSWORD_NOT_FOUND'){
+				msg.innerHTML = '잘못된 패스워드를 입력했습니다.';
+			}else {
+				alert("시스템 장애로 패스워드 변경이 실패 했습니다.");
+			}
+		}).catch((error)=> {
+			console.log("error = " + error);
+		})
+	
+}
+
+const logout = async() => {
+	
+	window.opener.postMessage('pwLogout', '*');
+    // 일정 시간 동안 대기 (예: 100ms)
+    await new Promise(resolve => setTimeout(resolve, 100));
+    window.close();
+		
+	
+}
+
+const pwCheckUpdate = async () => {
+	let formData = new FormData(modifyForm);
+	await fetch('/member/pwCheckNotice?userid=[[${userid}]]',{
+		method:'POST'
+	}).then((response) => response.json())
+	.then((data) => {
+		if(data.status === 'GOOD'){
+			alert('30일 후에 알려드리겠습니다.');
+			window.close();
+		}
+	}).catch((error) => {console.log('error => ' + error)})
+	
+	
+}
+</script>
+
+<body>
+<div class="main">
+
+	<div>
+		<img src="/images/logo.png" id="topBanner">
+	</div>
+	
+	<div class="ModifyForm">
+		<h1>패스워드를 변경해 주세요.</h1><br>
+		<form name="modifyForm" id="modifyForm" method="POST">
+			<input type="password" id="old_password" name="old_password" 
+				class="input_field" placeholder="기존 패스워드를 입력하세요">
+			<p id="msg" style="color:red;text-align:center;"></p>	
+			<input type="password" id="new_password" name="new_password" 
+				class="input_field" placeholder="신규 패스워드를 입력하세요">
+			<p style="color:red;text-align:center;">※ 8~20이내의 영문자, 숫자, 특수문자 조합으로 암호를 만들어 주세요.</p>
+			<input type="password" id="new_password1" name="new_password1" 
+				class="input_field" placeholder="신규 패스워드를 한번 더 입력하세요">
+		</form>	
+		<input type="button" class="btn_write" value="30일 후에 변경" onclick="pwCheckUpdate()">
+		<input type="button" class="btn_cancel" value="지금 변경" onclick="passwordUpdate()">
+	</div>
+
+</div>
+</body>
+</html>

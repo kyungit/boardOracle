@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>댓글 관리</title>
+<link rel="stylesheet" href="/css/board.css">
+<style>
+body{
+	margin-top: 100px;
+	background-color:#EFF5FB;
+}
+</style>
+</head>
+
+<script>
+
+const replySearch = () => {
+	const keyword = document.querySelector('#keyword');
+	document.location.href='/master/sysReply?keyword=' + keyword.value;
+}
+
+
+const replyPress = () => {
+	if(event.keyCode == 13) replySearch();
+}
+
+const deleteReply = async (replyseqno) => {
+	if(confirm('관리자 권한으로 댓글을 삭제하시겠습니까?') == true){
+		await fetch('/master/sysReply?replyseqno='+replyseqno,{
+			method:'POST'
+		}).then((response) => response.json())
+		.then((data) => {
+			console.log('wpqkf111111');
+			if(data.status === 'GOOD'){
+				console.log('wpqkf');
+				alert('게시글이 삭제되었습니다.');
+				document.location.href='/master/sysReply';
+			}else{
+				alert('시스템 장애로 실패하였습니다. else');
+			}
+		}).catch((error) => {alert('시스템 장애로 실패하였습니다. catch')})
+	}
+	else {
+		return false;
+	}
+	
+}
+
+
+</script>
+<body>
+<div class="main">
+        <img src="/images/logo.png" id="topBanner"><br>
+        <h1 style="text-align: center;"> < 댓글 목록 > </h1>
+        <span><h2>총 댓글 수는 [[${totalCount}]] 개 입니다.</h2></span>
+        <div class="bottom_menu">
+          	<a href="/master/sysManager">시스템 관리 홈</a>&nbsp;&nbsp;
+          	<a href="/master/sysReply">전체 보기</a>&nbsp;&nbsp;
+          
+        </div>
+		<p style="color:red">댓글을 클릭 시, 해당 게시글과 댓글을 볼 수 있습니다.</p><br>
+        <input type="text" name="keyword" id="keyword" 
+         		style="width:35%;height:30px;border:2px solid #168;font-size: 16px"
+         		placeholder="검색할 회원 이름 및 아이디를 입력하세요." onkeydown="replyPress()">
+        <input type="button" value="검색" 
+             style="width:5%;height:30px;background:#158;color:white;font-weight:bold;cursor:pointer;"
+             	onclick="replySearch()">		
+		 <br><br>
+        <table class="InfoTableMaster">
+        
+            <tr>
+                <th>번호</th>
+                <th>댓글 내용</th>
+                <th>이름</th>
+                <th>아이디</th>
+                <th>등록일자</th>
+                <th>삭제</th>
+                
+            </tr>
+          <th:block th:if="${reply != null}">     
+	            <tr th:each="reply,index:${reply}" 
+	            	onMouseover="this.style.background='#46D2D2'" 
+	            	onMouseout="this.style.background='none'">
+	                <td th:text="${totalCount-(page-1)*postNum - index.count +1} "></td>
+	                <td style="text-align: left;">
+	                	<a th:href="@{'/board/view?seqno=' + ${reply.seqno} + '&page=' + 
+	                			${page} + '&keyword=' + ${keyword}}" 
+	                   		onMouseover="this.style.textDecoration='underline'" 
+	                   		onMouseout="this.style.textDecoration='none'">
+	                   		<span th:text="${reply.replycontent}"></span>
+	                   	</a>
+	                </td>
+	                <td th:text="${reply.replywriter}"></td>
+	                <td th:text="${reply.userid}"></td>	   
+	                <td th:text="${reply.replyregdate}"></td>	  
+	                <td style="text-align: center;">
+	                	<input type="button" class="bottom_input_select" value="삭제" th:onclick="deleteReply([[${reply.replyseqno}]])">
+	                </td>         	
+	                <!-- <td th:text="${reply.telno}"></td> -->
+	            </tr>
+			</th:block>
+			<th:block th:if="${reply == null or #lists.isEmpty(reply)}">
+				<td colspan="5">댓글이 없습니다.</td>
+			</th:block>
+        </table>  
+	        <br>
+			  <div>[(${pageList})]</div>
+			<br>
+			<span th:if="${not #strings.isEmpty(keyword)}">
+        	<h4 style="color:red">이름/아이디/댓글 내용에 '[[${keyword}]]'이/가 들어간 결과는 총 [[${totalElement}]]개 입니다.</h4>
+		</span><br>
+        
+        <br><br>
+
+    </div>
+</body>
+</html>
