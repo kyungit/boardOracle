@@ -211,7 +211,7 @@ public class MasterController {
 		model.addAttribute("totalBoardCount", totalBoardCount);
 		model.addAttribute("keyword",keyword);
 		
-	}
+	} 
 	
 	
 	@GetMapping("/master/statsReply")
