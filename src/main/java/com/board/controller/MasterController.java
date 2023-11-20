@@ -195,7 +195,7 @@ public class MasterController {
 		model.addAttribute("allBoard",allBoard);
 		model.addAttribute("allReply",allReply);
 		
-	}
+	} 
 	
 	//관리자용 전체 게시물 통계
 	@GetMapping("/master/statsBoard")
