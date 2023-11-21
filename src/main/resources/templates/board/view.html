@@ -50,21 +50,7 @@
 	border-radius: 20px;
 }
 
-.bottom_menu {
-    margin-top: 20px;
-}
-.bottom_menu > a:link, .bottom_menu > a:visited {
-    background-color: #FFA500;
-    color: maroon;
-    padding: 15px 25px;
-    text-align: center;
-    display: inline-block;
-    text-decoration: none;
-}
-.bottom_menu > a:hover, .bottom_menu > a:active {
-    background-color: #1E90FF;
-    text-decoration: none;
-}    
+
 </style>
 
 <script>
@@ -422,7 +408,7 @@ const goBack = () => {
 		 	</div>
         </div>
 		 <br>
-        <div class="bottom_menu">
+        <div class="bottom_menu_member">
       		<th:block th:if="${pre_seqno != 0}">
                 <a th:href="@{'/board/view?seqno=' + ${pre_seqno} + '&page=' + ${page} + '&keyword=' + ${keyword}}">이전 ▼</a>&nbsp;&nbsp;
 			</th:block>
@@ -435,10 +421,14 @@ const goBack = () => {
             	<a th:href="@{'/board/modify?seqno=' + ${view.seqno} + '&page=' + ${page} + '&keyword=' + ${keyword}}">글 수정</a>&nbsp;&nbsp;
             	<a href="javascript:boardDelete()">글 삭제</a> &nbsp;&nbsp;
 			</th:block>
-			<th:block th:if="${session.role == 'MASTER'}">
-				<br><br><a href="/master/sysBoard">게시물 관리</a> &nbsp;&nbsp;
-				<a href="/master/sysReply">댓글 관리</a>
-			</th:block>        
+			<br><br>
+        </div>
+        <div class="bottom_menu">
+        <th:block th:if="${session.role == 'MASTER'}">
+			<span style="color:red"> 관리 탭은 MASTER권한을 가진 사람만 접근할 수 있습니다. </span><br>
+				<a href="/master/sysBoard" class="bottom_menu">게시물 관리</a> &nbsp;&nbsp;
+				<a href="/master/sysReply" >댓글 관리</a>
+			</th:block>   
         </div>
         <br>
 		 <div class="replyDiv" style="width:60%;height:300px;margin:auto;text-align:left;">

@@ -16,8 +16,8 @@ body{
 <body>
 <div class="main">
         <img src="/images/logo.png" id="topBanner"><br>
-        <h1 style="text-align: center;"> < 회원 목록 > </h1>
-        <span><h1>총 회원 수는 [[${totalElement}]] 명 입니다.</h1></span>
+        <h1 style="text-align: center;"> < 회원 통계 > </h1>
+        <span><h2>총 회원 수는 [[${totalElement}]] 명 입니다.</h2></span>
 	        
        <div class="bottom_menu">
         	<a href="/master/sysMember">회원 관리</a>
@@ -62,6 +62,7 @@ body{
         <br>
 		  <div>[(${pageList})]</div>
 		  <br>
+		  <span style="color:red"> 순위는 총 합계->게시글 수->댓글 수 로 정하였습니다. </span>
         <span th:if="${not #strings.isEmpty(keyword)}">
 		    	<h4 style="color:red">'[[${keyword}]]'이/가 포함된 회원은 [[${searchCount}]] 명 입니다.</h4>
 			</span>

@@ -2,10 +2,8 @@ package com.board.controller;
 
 import java.io.File;
 import java.net.URLEncoder;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,10 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.board.dto.BoardDTO;
 import com.board.dto.FileDTO;
 import com.board.dto.LikeDTO;
-import com.board.dto.MemberDTO;
 import com.board.dto.ReplyDTO;
 import com.board.service.BoardService;
-import com.board.service.MemberService;
 import com.board.util.Page;
 
 @Controller
@@ -62,14 +58,16 @@ public class BoardController {
 	public void getList(Model model,@RequestParam(name="page",defaultValue="1",required=false) int pageNum,
 			@RequestParam(name="keyword",defaultValue="",required=false) String keyword, HttpSession session) throws Exception {
 		
-		int postNum = 5; 									//한 화면에 보여지는 게시물 행의 갯수
+		
+		
+		//Page page = new Page();
+		Page page = Page.getInstance();
+		int postNum = page.getPostNum();
+		//int postNum = 5; 									//한 화면에 보여지는 게시물 행의 갯수
 		int startPoint = (pageNum-1) * postNum + 1; 		//페이지 시작 게시물 번호
 		int endPoint = pageNum * postNum;
 		int pageListCount = 5; 								//화면 하단에 보여지는 페이지리스트의 페이지 갯수		
 		int totalCount = service.getTotalCount(keyword); 	//전체 게시물 갯수	
-		
-		Page page = new Page();
-
 		model.addAttribute("list", service.list(startPoint,endPoint,keyword));
 		model.addAttribute("totalElement", totalCount);
 		model.addAttribute("postNum", postNum);
@@ -79,7 +77,7 @@ public class BoardController {
 		model.addAttribute("pageList", page.getPageList(pageNum, postNum, pageListCount,totalCount,keyword));
 		
 		
-		String userid = (String)session.getAttribute("userid");
+		//String userid = (String)session.getAttribute("userid");
 		//session.setAttribute("lastpwdate", service.memberInfo(userid).getLastpwdate());
 		
 	

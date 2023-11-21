@@ -1,21 +1,26 @@
 package com.board.controller;
 
 import java.io.File;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import javax.sql.DataSource;
+
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.board.dto.FileDTO;
-import com.board.dto.MemberDTO;
-import com.board.service.BoardService;
 import com.board.service.MasterService;
 import com.board.dto.StatsDTO;
 import com.board.util.Page;
@@ -25,8 +30,11 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class MasterController {
+	@Autowired
 	private final MasterService service;
-	
+	@Autowired
+    private DataSource dataSource;
+
 	
 	@GetMapping("/master/sysManager")
 	public void getSysManager() {
@@ -38,15 +46,16 @@ public class MasterController {
 	public void getSysMember(Model model,@RequestParam(name="page",defaultValue="1",required=false) int pageNum,
 			@RequestParam(name="keyword",defaultValue="",required=false) String keyword) throws Exception{
 		
-		int postNum = 5; 									//한 화면에 보여지는 게시물 행의 갯수
+	
+		Page page = Page.getInstance();
+		int postNum = page.getPostNum();
+		//int postNum = 5; 									//한 화면에 보여지는 게시물 행의 갯수
 		int startPoint = (pageNum-1) * postNum + 1; 		//페이지 시작 게시물 번호
 		int endPoint = pageNum * postNum;
 		int pageListCount = 5; 								//화면 하단에 보여지는 페이지리스트의 페이지 갯수		
 		//int totalCount = service.allMemberCount(keyword); 	//전체 게시물 갯수	
 		int totalCountSearch = service.allMemberSearchCount(keyword);
 		int totalCount = service.allMemberCount();
-		Page page = new Page();
-		
 		
 		
 		model.addAttribute("member", service.allMember(startPoint,endPoint,keyword));
@@ -70,15 +79,17 @@ public class MasterController {
 	@GetMapping("/master/sysBoard")
 	public void getSysBoard(Model model,@RequestParam(name="page",defaultValue="1",required=false) int pageNum,
 			@RequestParam(name="keyword",defaultValue="",required=false) String keyword) throws Exception  {
-		int postNum = 5; 									//한 화면에 보여지는 게시물 행의 갯수
+		//int postNum = 5; 									//한 화면에 보여지는 게시물 행의 갯수
+	
+		
+		Page page = Page.getInstance();
+		int postNum = page.getPostNum();
 		int startPoint = (pageNum-1) * postNum + 1; 		//페이지 시작 게시물 번호
 		int endPoint = pageNum * postNum;
 		int pageListCount = 5; 								//화면 하단에 보여지는 페이지리스트의 페이지 갯수		
 		int totalCountbyMember = service.getTotalCountByMember(keyword); 	//회원별 전체 게시물 갯수	
 		
 		int totalCount = service.getTotalCount();
-		
-		Page page = new Page();
 
 		model.addAttribute("list", service.list(startPoint,endPoint,keyword));
 		//model.addAttribute("writer", service.list(startPoint,endPoint,keyword).get(0).getWriter());
@@ -107,7 +118,10 @@ public class MasterController {
 	@GetMapping("/master/sysReply")
 	public void getSysReply(Model model,@RequestParam(name="page",defaultValue="1",required=false) int pageNum,
 			@RequestParam(name="keyword",defaultValue="",required=false) String keyword) throws Exception {
-		int postNum = 5; 									//한 화면에 보여지는 게시물 행의 갯수
+		//int postNum = 5; 									//한 화면에 보여지는 게시물 행의 갯수
+		
+		Page page = Page.getInstance();
+		int postNum = page.getPostNum();
 		int startPoint = (pageNum-1) * postNum + 1; 		//페이지 시작 게시물 번호
 		int endPoint = pageNum * postNum;
 		int pageListCount = 5; 								//화면 하단에 보여지는 페이지리스트의 페이지 갯수		
@@ -115,7 +129,7 @@ public class MasterController {
 		
 		int totalCount = service.getTotalReplyCount();
 		
-		Page page = new Page();
+		
 
 		model.addAttribute("reply", service.replyList(startPoint,endPoint,keyword));
 		//model.addAttribute("writer", service.replyList(startPoint,endPoint,keyword).get(0).getReplywriter());
@@ -233,11 +247,55 @@ public class MasterController {
 		
 		model.addAttribute("searchCount",service.statsMember(keyword).size());
 	}
-	
+	  
+
 	@GetMapping("/master/systemInfo")
-	public void getSystemInfo(Model model) {
-		 //model.addAttribute("springBootVersion", springBootVersion);
+	public void getSystemInfo(Model model) throws SQLException {
+		model.addAttribute("osName", System.getProperty("os.name"));
+        model.addAttribute("osVersion", System.getProperty("os.version"));
+       
+		model.addAttribute("javaVersion", System.getProperty("java.version"));
+		model.addAttribute("JVMName", System.getProperty("java.vm.name"));
+	    model.addAttribute("JVMVersion", System.getProperty("java.vm.version"));
+	        
+	    Runtime runtime = Runtime.getRuntime();
+	    model.addAttribute("totalMemory", runtime.totalMemory());
+	    model.addAttribute("freeMemory", runtime.freeMemory());
+	    
+	    
+	    
+	    DatabaseMetaData metaData = dataSource.getConnection().getMetaData();
+        String driverName = metaData.getDriverName();
+        String driverVersion = metaData.getDriverVersion();
+
+        // 드라이버 정보 모델에 추가
+        model.addAttribute("databaseDriverName", driverName);
+        model.addAttribute("databaseDriverVersion", driverVersion);
+        
+        
+        
+        
+	    // 현재 시간 정보 추가
+	    model.addAttribute("currentTime", LocalDateTime.now());
+
+	}
+	
+	
+	
+	@GetMapping("/master/sysBoardCss")
+	public void getSysBoardCss(Model model) {
+		int postNumNow = Page.getInstance().getPostNum();
+		model.addAttribute("postNumNow",postNumNow);
+		
 		
 	}
+	@ResponseBody
+	@PostMapping("/master/sysBoardCss")
+	public String postSysBoardCss(int postNum) {
+		Page.getInstance().setPostNum(postNum);
+		
+		return "{\"status\" : \"GOOD\" , \"page\" : \"" + postNum +"\"}";
+	}
+	
 	
 }

@@ -2,6 +2,21 @@ package com.board.util;
 
 public class Page {
 	
+	private static Page instance = new Page();
+	private int postNum=5;
+	
+	//싱글톤 패턴
+	 public static Page getInstance() {
+		 	return instance;
+	 }
+	 
+	public void setPostNum(int postNumManage) {
+		this.postNum = postNumManage;
+	}
+	public int getPostNum() {
+		return postNum;
+	}
+	
 	public String getPageList(int pageNum, int postNum, int pageListCount, int totalCount, String keyword) {
 		
 		//pageNum : 현재 페이지 번호
@@ -11,6 +26,8 @@ public class Page {
 		//totalPage : 전체 페이지 갯수
 		//section : 한 개의 페이지 목록.현재 section 번호 예) 1 2 3 4 5 --> section 1, 6 7 8 9 10 --> section 2
 		//totalSection : 전체 section 갯수 
+		
+		postNum = this.postNum;
 		
 		int totalPage = (int)Math.ceil(totalCount/(double)postNum);
 		int totalSection = (int)Math.ceil(totalPage/(double)pageListCount);

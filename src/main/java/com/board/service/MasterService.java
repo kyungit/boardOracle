@@ -8,6 +8,7 @@ import com.board.dto.MemberDTO;
 import com.board.dto.ReplyDTO;
 import com.board.dto.StatsDTO;
 
+
 public interface MasterService {
 	
 	public List<MemberDTO> allMember(int startPoint,int endPoint,String keyword);

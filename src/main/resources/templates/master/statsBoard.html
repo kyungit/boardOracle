@@ -13,7 +13,6 @@ body{
 </style>
 <body>
 <div class="main">
-<div></div>
         <img src="/images/logo.png" id="topBanner"><br>
         <h1 style="text-align: center;"> < 게시글 통계 > </h1>
         <span><h2>총 게시물 수는 [[${totalBoardCount}]] 개 입니다.</h2></span>
@@ -53,7 +52,7 @@ body{
 
 
 			<th:block th:if="${stats == null or #lists.isEmpty(stats)}">
-				<td colspan="5">등록된 게시물이 없습니다.</td>
+				<td colspan="4">등록된 게시물이 없습니다.</td>
 			</th:block>
         </table>  
         <br>

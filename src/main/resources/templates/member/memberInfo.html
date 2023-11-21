@@ -45,15 +45,19 @@
 			<br><br>
 		</div>
 		<br>
-		<div class="bottom_menu">
-			<a href="/board/list?page=1">게시판<br>처음으로</a> &nbsp;&nbsp;
+		<div class="bottom_menu_member">
+			<a href="/board/list?page=1">처음으로</a> &nbsp;&nbsp;
 			<th:block th:if="${memberInfo.userid == session.userid}">
-				<a href="/member/memberInfoModify">회원정보<br>수정</a> &nbsp;&nbsp;
-				<a href="/member/memberPasswordModify">패스워드<br>변경</a> &nbsp;&nbsp;
-				<a href="/member/memberDrop">회원<br>탈퇴</a> &nbsp;&nbsp;
+				<a href="/member/memberInfoModify">회원정보 수정</a> &nbsp;&nbsp;
+				<a href="/member/memberPasswordModify">패스워드변경</a> &nbsp;&nbsp;
+				<a href="/member/memberDrop">회원탈퇴</a> &nbsp;&nbsp;
 			</th:block>
+		</div>
+		<br>
+		<div class="bottom_menu">
+			<span style="color:red">관리 탭은 MASTER권한을 가진 사람만 접근할 수 있습니다.</span><br><br>
 			<th:block th:if="${session.role == 'MASTER'}">
-				<a href="/master/sysMember">관리 페이지<br>이동</a> &nbsp;&nbsp;
+				<a href="/master/sysMember">회원 관리 페이지로 이동</a> &nbsp;&nbsp;
 			</th:block>
 		</div>
 		

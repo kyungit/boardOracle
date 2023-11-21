@@ -65,13 +65,14 @@ body{
 	display: block;
 }
 .sub_menu a{
-	color: black;
+	color: white;
 	padding: 8px;
 	text-decoration: none;
 	display: block;
 }
 .sub_menu a:hover{
 	background-color: #4675a4;
+	color: black;
 }
 
 </style>
@@ -82,27 +83,21 @@ body{
 <div class="menubar">
 	<ul class="main_menu">
 		<li><a href="/board/list?page=1">홈으로</a></li>
-		<li><a href="javascript:void(0);" onclick="loadSysStats()">총 통계</a>
+		<li><a href="#" onclick="loadSysStats()">총 통계</a>
 			<ul class="sub_menu">
-				<!-- <li><a href="/master/sysMember?page=1">전체 회원 수</a></li> -->
-				<li><a href="javascript:void(0);" onclick="statsMember('')"> 회원 통계 </a></li>
-				<li><a href="javascript:void(0);" onclick="statsBoard('')"> 게시물 통계 </a></li> 	<!-- 회원 별 게시물 , 총 게시물 수.-->
-				<li><a href="javascript:void(0);" onclick="statsReply('')"> 댓글 통계 </a></li>
-				<!-- <li><a href="/master/sysBoard?page=1">게시물 수</a></li> -->
-				<!-- <li><a href="/master/sysReply?page=1">댓글 수</a></li>	회원 별 댓글 , 총 댓글수 .  -->
+				<li><a href="#" onclick="statsMember('')"> 회원 통계 </a></li>
+				<li><a href="#" onclick="statsBoard('')"> 게시물 통계 </a></li> 	<!-- 회원 별 게시물 , 총 게시물 수.-->
+				<li><a href="#" onclick="statsReply('')"> 댓글 통계 </a></li>
 			</ul></li>
-		<!-- <li><a href="/master/fileDelete">첨부파일 삭제</a></li> -->
-		<li><a href="javascript:void(0);" onclick="loadFileDelete()">첨부파일 삭제</a></li>
-		<li><a href="#">게시판 관리</a>
+		
+		<li><a href="#" onclick="loadFileDelete()">첨부파일 삭제</a></li>
+		<li><a href="/master/sysBoard">게시물 관리</a>	
 			<ul class="sub_menu">
-				<!-- <li><a href="javascript:void(0);" onclick="loadSysMember()">전체 회원 수</a></li>
-				<li><a href="javascript:void(0);" onclick="loadSysBoard()">전체 게시물 수</a></li> 	회원 별 게시물 , 총 게시물 수.
-				<li><a href="javascript:void(0);" onclick="loadSysReply()">전체 댓글 수</a></li> -->
 				<li><a href="/master/sysMember">회원 관리</a></li>
-				<li><a href="/master/sysBoard">게시물 수</a></li> 	
-				<li><a href="/master/sysReply">댓글 수</a></li>	
+				<li><a href="/master/sysReply">댓글 관리</a></li>
+				<li><a href="#" onclick="loadSysBoardCss()" >페이지 관리</a></li>
 			</ul></li>
-		<li><a href="#">시스템 정보</a></li>
+		<li><a href="#" onclick="loadSystemInfo()">시스템 정보</a></li>
 	</ul>
 	
     <!-- 이 부분에 sysMember.html 파일의 내용이 표시됩니다. -->
@@ -236,124 +231,79 @@ const loadFileDelete = () => {
 
 
 
-//----------------------------------------------------------------------
-
-
-
-
-
-<!-- 
-
-//===================멤버 검색==================
-function loadSysMember() {
-    // Fetch API를 사용하여 sysMember.html 파일 가져오기
-    fetch('/master/sysMember?page=1')
-        .then(response => response.text())
-        .then(data => {
-            // 가져온 HTML 내용을 삽입할 요소 선택
-            const contentContainer = document.getElementById('content-container');
-            
-            // 삽입
-            contentContainer.innerHTML = data;
-        })
-        .catch(error => console.error('파일을 불러오는 도중 오류 발생:', error));
-}
-function loadSysMemberSearch(keyword) {
-    // Fetch API를 사용하여 sysMember.html 파일 가져오기
-    fetch('/master/sysMember?page=1&keyword='+keyword)
-        .then(response => response.text())
-        .then(data => {
-            // 가져온 HTML 내용을 삽입할 요소 선택
-            const contentContainer = document.getElementById('content-container');
-            
-            // 삽입
-            contentContainer.innerHTML = data;
-        })
-        .catch(error => console.error('파일을 불러오는 도중 오류 발생:', error));
-}
-
-
-
-
-//===================게시글 검색==================
-function loadSysBoard() {
-    // Fetch API를 사용하여 sysMember.html 파일 가져오기
-    fetch('/master/sysBoard?page=1')
-        .then(response => response.text())
-        .then(data => {
-            // 가져온 HTML 내용을 삽입할 요소 선택
-            const contentContainer = document.getElementById('content-container');
-            
-            // 삽입
-            contentContainer.innerHTML = data;
-        })
-        .catch(error => console.error('파일을 불러오는 도중 오류 발생:', error));
-}
-
-function loadSysBoardSearch(keyword) {
-    // Fetch API를 사용하여 sysMember.html 파일 가져오기
-    fetch('/master/sysBoard?page=1&keyword='+keyword)
-        .then(response => response.text())
-        .then(data => {
-            // 가져온 HTML 내용을 삽입할 요소 선택
-            const contentContainer = document.getElementById('content-container');
-            
-            // 삽입
-            contentContainer.innerHTML = data;
-        })
-        .catch(error => console.error('파일을 불러오는 도중 오류 발생:', error));
-}
-
-//===================댓글 검색==================
-function loadSysReply() {
-    // Fetch API를 사용하여 sysMember.html 파일 가져오기
-    fetch('/master/sysReply?page=1')
-        .then(response => response.text())
-        .then(data => {
-            // 가져온 HTML 내용을 삽입할 요소 선택
-            const contentContainer = document.getElementById('content-container');
-            
-            // 삽입
-            contentContainer.innerHTML = data;
-        })
-        .catch(error => console.error('파일을 불러오는 도중 오류 발생:', error));
-}
-
-function loadSysReplySearch(keyword) {
-    // Fetch API를 사용하여 sysMember.html 파일 가져오기
-    fetch('/master/sysReply?page=1&keyword='+keyword)
-        .then(response => response.text())
-        .then(data => {
-            // 가져온 HTML 내용을 삽입할 요소 선택
-            const contentContainer = document.getElementById('content-container');
-            
-            // 삽입
-            contentContainer.innerHTML = data;
-        })
-        .catch(error => console.error('파일을 불러오는 도중 오류 발생:', error));
-}
-
-
-
-
-//--------------------------파일 삭제-------------------------------
-const deleteFile = async () => {
+//게시판 관리 열기
+const loadSysBoardCss = () => {
 	
-	alert('파일이 삭제됩니다.');
-	await fetch('/master/fileDelete', {
-		method: 'POST'
-	}).then((response)=> response.json())
-	.then((data)=> {
-		if(data.status === 'GOOD'){
-			alert("파일이 삭제되었습니다.");
-			loadFileDelete();
-		}
-	}).catch((error)=> {
-		alert("시스템 장애로 게시물 등록이 실패했습니다.");
-		console.log("error" + error);
-	})
+	fetch('/master/sysBoardCss')
+    .then(response => response.text())
+    .then(data => {
+        // 가져온 HTML 내용을 삽입할 요소 선택
+        const contentContainer = document.getElementById('content-container');
+        
+        // 삽입
+        contentContainer.innerHTML = data;
+    })
+    .catch(error => console.error('파일을 불러오는 도중 오류 발생:', error));
+
 }
- -->
+
+const updateBoardSettings = async (postNumNow) => {
+    let postNum = document.querySelector('#postNum');
+    let formData = new FormData(postNumChange);
+
+    // 서버에서 이미 초기화된 postNumNow 값을 직접 사용
+   
+	console.log(postNumNow);
+	console.log(postNum.value);
+    if (postNumNow === postNum.value) {
+        alert('현재 설정값과 같습니다.');
+    } else {
+        // 나머지 코드는 그대로 유지
+        await fetch(('/master/sysBoardCss'), {
+            method: 'POST',
+            body: formData
+        }).then((response) => response.json())
+            .then((data) => {
+                if (data.status === 'GOOD') {
+                    alert('한 페이지에 보일 게시물 수가 ' + data.page + '로 변경되었습니다.');
+                }
+            })
+    }
+}
+
+
+
+
+//----------------------------------------------------------------------
+//시스템 정보 보기
+const loadSystemInfo = () => {
+	 fetch('/master/systemInfo')
+     .then(response => response.text())
+     .then(data => {
+         // 가져온 HTML 내용을 삽입할 요소 선택
+         const contentContainer = document.getElementById('content-container');
+         
+         // 삽입
+         contentContainer.innerHTML = data;
+     })
+     .catch(error => console.error('파일을 불러오는 도중 오류 발생:', error));
+	
+	
+}
+//시스템 모드에서 현재 시간 실시간 업데이트
+setInterval(function() {
+    var currentTimeElement = "";
+    currentTimeElement = document.getElementById("currentTime");
+    var now = new Date();
+    var formattedTime = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() + ' ' +
+                        now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
+    if(currentTimeElement !== null)
+    	currentTimeElement.innerText = formattedTime;
+}, 1000);
+
+
+
+
 
 
 </script>

@@ -107,7 +107,7 @@
 <select id="statsBoard" parameterType="String" resultType="com.board.dto.StatsDTO">
 select  userid, username, stats,seq
   from (
-    select row_number() over (order by count(seqno) desc) as seq, A.userid, A.username, count(seqno) as stats
+    select RANK() over (order by count(seqno) desc) as seq, A.userid, A.username, count(seqno) as stats
     from tbl_member A left outer join tbl_board B on A.userid=B.userid
     group by A.userid, A.username
     order by seq
@@ -118,7 +118,7 @@ where userid like '%'||#{keyword}||'%' or username like '%'||#{keyword}||'%'
 <!-- 댓글 통계(멤버별 댓글) -->
 <select id="statsReply" parameterType="String" resultType="com.board.dto.StatsDTO">
 select * from (
-	select row_number() over (order by count(replyseqno) desc) as seq, A.userid, A.username, count(replyseqno) as stats
+	select RANK() over (order by count(replyseqno) desc) as seq, A.userid, A.username, count(replyseqno) as stats
 	from tbl_member A left outer join tbl_reply B on A.userid=B.userid
 	group by A.userid,A.username
 	order by seq
@@ -126,15 +126,33 @@ select * from (
 where userid like '%'||#{keyword}||'%' or username like '%'||#{keyword}||'%'
 </select>
 
-<!-- 회원 통계(회원별 총 댓글+게시글+합계) -->
+<!-- 회원 총 통계(회원별 총 댓글+게시글+합계) -->
 <select id="statsMember" parameterType="String" resultType="com.board.dto.StatsDTO">
+
 select * from (
-select row_number() over (order by count(distinct B.seqno)+count(distinct C.replyseqno) desc) as seq, A.userid,A.username, count(distinct B.seqno) as board, count(distinct C.replyseqno) as reply, count(distinct B.seqno)+count(distinct C.replyseqno) as stats
-from tbl_member A left outer join tbl_board B ON A.userid = B.userid
-left outer join tbl_reply C ON A.userid = C.userid
-group by A.userid, A.username
-order by stats desc)
+    select
+        rank() over (order by  count(DISTINCT B.seqno) + count(DISTINCT C.replyseqno) desc,
+                                    count(DISTINCT B.seqno) desc, count(DISTINCT C.replyseqno) desc) AS seq,
+        A.userid,
+        A.username,
+        count(DISTINCT B.seqno) AS board,
+        count(DISTINCT C.replyseqno) AS reply,
+        count(DISTINCT B.seqno) + count(DISTINCT C.replyseqno) AS stats
+    from
+        tbl_member A
+        left outer join tbl_board B ON A.userid = B.userid
+        left outer join tbl_reply C ON A.userid = C.userid
+    group by
+        A.userid,
+        A.username
+    order by
+        stats desc, board desc, reply desc
+)
 where userid like '%'||#{keyword}||'%' or username like '%'||#{keyword}||'%'
+order by
+    board desc,
+    reply desc
+
 </select>
 
 

@@ -120,19 +120,19 @@ window.onload = () => {
 	                <td th:text="${list.hitno}"></td>
 	            </tr>
 			</th:block>
-			<th:block th:if="${list == null}">
+			<th:block th:if="${list == null or #lists.isEmpty(list)}">
 				<td colspan="5">등록된 게시물이 없습니다.</td>
 			</th:block>
         </table>  
         <br>
 		  <div>[(${pageList})]</div>
 		  <br>
-        <div class="bottom_menu">
+        <div class="bottom_menu_member">
         	<a href="/board/list?page=1">처음으로</a>&nbsp;&nbsp;
           <a href="/board/write">글쓰기</a>&nbsp;&nbsp;
           <a href="/member/memberInfo">사용자관리</a>&nbsp;&nbsp;
           <th:block th:if="${session.role == 'MASTER'}">
-          	<a href="/master/sysManager">시스템관리</a>&nbsp;&nbsp;
+          	<a href="/master/sysManager" class="bottom_menu">시스템관리</a>&nbsp;&nbsp;
           </th:block>
           
           <a href="javascript:logout()">로그아웃</a>&nbsp;&nbsp;

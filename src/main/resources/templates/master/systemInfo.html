@@ -9,10 +9,91 @@ body{
 	margin-top: 100px;
 	background-color:#EFF5FB;
 }
+    
+
+
+.info {
+    position: relative;
+    top: 20px;
+    width: 80%;
+    margin: auto;
+    font-size: 120%;
+    border: solid 1px gray;
+    overflow-x: auto;
+}
+.info h3{
+	text-align:center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+    /* 크기 조절하는 부분 */
+    width: 30%;
+}
+
+td {
+    /* 크기 조절하는 부분 */
+    width: 70%;
+}
 </style>
-
 </head>
-<body>
+<script>
 
+</script>
+<body class="main">
+<img src="/images/logo.png" id="topBanner"><br>
+
+    <div class="info">
+        <table>
+        <h3>시스템 정보</h3>
+            <tr>
+                <th>운영체제</th>
+                <td th:text="${osName}"></td>
+            </tr>
+            <tr>
+                <th>운영체제 버전</th>
+                <td th:text="${osVersion}"></td>
+            </tr>
+           
+            <tr>
+                <th>자바 버전</th>
+                <td th:text="${javaVersion}"></td>
+            </tr>
+            <tr>
+                <th>JVM 이름</th>
+                <td th:text="${JVMName}"></td>
+            </tr>
+            <tr>
+                <th>JVM 버전</th>
+                <td th:text="${JVMVersion}"></td>
+            </tr>
+            <tr>
+                <th>DB 드라이버</th>
+                <td th:text="${databaseDriverName}"></td>
+            </tr>
+            <tr>
+                <th>DB 드라이버 버전</th>
+                <td th:text="${databaseDriverVersion}"></td>
+            </tr>
+            
+              <tr>
+                <th>현재 시간</th>
+                <td id="currentTime" th:text="${#temporals.format(currentTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            </tr>
+        </table>
+    </div><br><br>
+    <!-- <a href="#" o class="bottom_input" style="align:center">돌아가기</a> -->
 </body>
 </html>
