@@ -57,6 +57,8 @@ public interface MemberMapper {
 	//pwcheck  업데이트
 	public void pwCheckUpdate(String userid);
 
+	public void checkfileXwhenDrop(String userid);
+
 	
 	
 }

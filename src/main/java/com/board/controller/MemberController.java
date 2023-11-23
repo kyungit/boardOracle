@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.board.dto.AddressDTO;
+import com.board.dto.FileDTO;
 import com.board.dto.MemberDTO;
 import com.board.service.MemberService;
 import com.board.util.Page;
@@ -66,10 +67,10 @@ public class MemberController {
 			//MemberDTO memberInfo = service.memberInfo(member.getUserid());
 			//memberInfo.setAuthkey(service.memberInfoByAuthkey(member).getAuthkey()); 
 			MemberDTO memberInfo = service.memberInfoByAuthkey(member);
-			if(memberInfo != null) {
+			//if(memberInfo != null) {
 				//System.out.println("lastpwdate컨트롤러 : " + service.memberInfo(member.getUserid()).getLastpwdate());
 				
-
+			
 				 LocalDate lastpwdate = memberInfo.getLastpwdate();
 				 int pwCheck = memberInfo.getPwcheck();
 				 LocalDate after30 = lastpwdate.plusDays(pwCheck * 30);
@@ -80,6 +81,8 @@ public class MemberController {
 					 return "{\"userid\" : \"" + memberInfo.getUserid() + "\" , \"pwStatus\" : \"" + pwStatus + "\",\"username\" : \"" +memberInfo.getUsername()+ "\",\"pwcheck\" : \"" +memberInfo.getPwcheck()+ "\"}";
 				 }
 				 
+				 
+				
 				//세션 생성
 				session.setMaxInactiveInterval(3600*24*7);//세션 유지 기간 설정
 				session.setAttribute("userid", memberInfo.getUserid());
@@ -89,11 +92,11 @@ public class MemberController {
 				session.setAttribute("pwcheck", memberInfo.getPwcheck());
 				session.setAttribute("lastpwdate", memberInfo.getLastpwdate());
 				//System.out.println("lastpwdate 세션 생성(member컨트롤러) : " + service.memberInfo(member.getUserid()).getLastpwdate());
-				
+					
 				
 				return "{\"message\":\"GOOD\"}";
 				//return "{\"message\":\"GOOD\",\"pwStatus\":\"" +pwStatus+ "\"}";
-			}
+			//}
 			
 		}		
 		
@@ -109,9 +112,7 @@ public class MemberController {
 		}else {
 			//제대로 된 아이디와 패스워드가 입력되었을 때
 			
-			//마지막 로그인 날짜 등록
-			member.setLastlogindate(LocalDate.now());
-			service.lastlogindateUpdate(member);	
+			
 			
 			//패스워드 확인 후 마지막 패스워드 변경일이 30일이 경과 되었을 경우 ...
 			 
@@ -122,7 +123,11 @@ public class MemberController {
 				 pwStatus = "Y"; 
 				 return "{\"userid\" : \"" + service.memberInfo(member.getUserid()).getUserid() + "\" , \"pwStatus\" : \"" + pwStatus + "\",\"username\" : \"" +service.memberInfo(member.getUserid()).getUsername()+ "\",\"pwcheck\" : \"" +service.memberInfo(member.getUserid()).getPwcheck()+ "\"}";
 			 }
-	      
+			 
+			 
+			//마지막 로그인 날짜 등록
+			member.setLastlogindate(LocalDate.now());
+			service.lastlogindateUpdate(member);	
 			//세션 생성
 			session.setMaxInactiveInterval(3600*24*7);//세션 유지 기간 설정
 			session.setAttribute("userid", service.memberInfo(member.getUserid()).getUserid());
@@ -231,6 +236,9 @@ public class MemberController {
 		String userid = (String)session.getAttribute("userid");
 		
 		MemberDTO memberDB = service.memberInfo(userid);
+		
+		
+		
 		memberDB.setGender(member.getGender());
 		memberDB.setHobby(member.getHobby());
 		memberDB.setJob(member.getJob());
@@ -242,6 +250,18 @@ public class MemberController {
 		
 		if(!multipartFile.isEmpty()) {
 			System.out.println("*****************multipartFile********************");
+			
+			File file = new File("c:\\Repository\\profile\\");
+			File[] fileList = file.listFiles();
+			
+					
+			for(int i=0;i<fileList.length;i++) {
+	    		if(fileList[i].getName().equals(memberDB.getStored_filename())) {
+	    			fileList[i].delete();
+	    		}
+	    	}
+			
+			
 			String org_filename = multipartFile.getOriginalFilename();
 			String org_fileExtension = org_filename.substring(org_filename.lastIndexOf("."));			
 			String stored_filename = UUID.randomUUID().toString().replaceAll("-", "") + org_fileExtension;
@@ -286,6 +306,10 @@ public class MemberController {
 //		if(!pwdEncoder.matches(old_password, service.memberInfo(userid).getPassword())) {
 //			return "{\"message\":\"PASSWORD_NOT_FOUND\"}";
 //		}
+		
+		if(userid.equals("")) {
+			userid=(String)session.getAttribute("userid");
+		}
 		if(!pwdEncoder.matches(old_password, service.memberInfo(userid).getPassword())) {
 			return "{\"message\":\"PASSWORD_NOT_FOUND\"}";
 		}
@@ -397,6 +421,16 @@ public class MemberController {
 			return "{\"message\":\"PASSWORD_NOT_FOUND\"}";
 		}
 		else {
+			File file = new File("c:\\Repository\\profile\\");
+			File[] fileList = file.listFiles();
+			
+					
+			for(int i=0;i<fileList.length;i++) {
+	    		if(fileList[i].getName().equals(member.getStored_filename())) {
+	    			fileList[i].delete();
+	    		}
+	    	}
+			service.checkfileXwhenDrop(userid);
 			service.memberDrop(userid);
 			return "{\"status\" : \"GOOD\"}";
 			

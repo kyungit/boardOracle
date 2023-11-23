@@ -135,6 +135,12 @@ public class MemberServiceImpl implements MemberService {
 		
 	}
 
+	@Override
+	public void checkfileXwhenDrop(String userid) {
+		mapper.checkfileXwhenDrop(userid);
+		
+	}
+
 	
 	
 

@@ -89,5 +89,9 @@
 </update> 
 
 
+<!-- 회원 탈퇴 시 checkfile X로 설정 -->
+<update id="checkfileXwhenDrop" parameterType="String">
+	update tbl_file set checkfile='X' where userid=#{userid}
+</update> 
 
 </mapper>

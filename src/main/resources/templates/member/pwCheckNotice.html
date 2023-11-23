@@ -75,6 +75,7 @@ const pwCheckUpdate = async () => {
 		if(data.status === 'GOOD'){
 			alert('30일 후에 알려드리겠습니다.');
 			window.close();
+			window.opener.location.href='/board/login';
 		}
 	}).catch((error) => {console.log('error => ' + error)})
 	

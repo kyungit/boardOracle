@@ -50,5 +50,7 @@ public interface MemberService {
 	public int addrTotalCount(String addrSearch);
 
 	public void pwCheckUpdate(String userid);
+
+	public void checkfileXwhenDrop(String userid);
 	
 }

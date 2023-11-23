@@ -132,7 +132,6 @@ public class MasterController {
 		
 
 		model.addAttribute("reply", service.replyList(startPoint,endPoint,keyword));
-		//model.addAttribute("writer", service.replyList(startPoint,endPoint,keyword).get(0).getReplywriter());
 		model.addAttribute("totalElement", totalCountbyMember);
 		model.addAttribute("postNum", postNum);
 		model.addAttribute("totalCount",totalCount);
@@ -172,14 +171,10 @@ public class MasterController {
 		//<!-- File file = new File(삭제할 파일 전체경로)  == ("c:\Repository\file\1234.jpg"); file.delete(); for문 돌리기 -->
 		File file = new File("c:\\Repository\\file\\"); 
 		File[] fileList = file.listFiles();
-		System.out.println("fileList " + fileList[0].getName());
 		
 		List<FileDTO> fileListDB = service.checkfileXSearch();
        
-		List<String> listddd = new ArrayList<>(); 
-		
-        //FileDTO fileDB = new FileDTO();
-        
+	
         for(int i = 0;i<fileListDB.size();i++) {
         	for(int j=0;j<fileList.length;j++) {
 
@@ -188,6 +183,7 @@ public class MasterController {
         		}
         	}
         }
+        
         service.checkfileDelete();
         
         return "{\"status\" : \"GOOD\" }";
@@ -263,7 +259,6 @@ public class MasterController {
 	    model.addAttribute("freeMemory", runtime.freeMemory());
 	    
 	    
-	    
 	    DatabaseMetaData metaData = dataSource.getConnection().getMetaData();
         String driverName = metaData.getDriverName();
         String driverVersion = metaData.getDriverVersion();
@@ -271,8 +266,6 @@ public class MasterController {
         // 드라이버 정보 모델에 추가
         model.addAttribute("databaseDriverName", driverName);
         model.addAttribute("databaseDriverVersion", driverVersion);
-        
-        
         
         
 	    // 현재 시간 정보 추가
@@ -296,6 +289,5 @@ public class MasterController {
 		
 		return "{\"status\" : \"GOOD\" , \"page\" : \"" + postNum +"\"}";
 	}
-	
 	
 }
