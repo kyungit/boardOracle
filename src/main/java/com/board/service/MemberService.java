@@ -52,5 +52,7 @@ public interface MemberService {
 	public void pwCheckUpdate(String userid);
 
 	public void checkfileXwhenDrop(String userid);
+
+	public MemberDTO searchPassword(MemberDTO member);
 	
 }

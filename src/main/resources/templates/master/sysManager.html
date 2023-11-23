@@ -91,10 +91,11 @@ body{
 			</ul></li>
 		
 		<li><a href="#" onclick="loadFileDelete()">첨부파일 삭제</a></li>
-		<li><a href="/master/sysBoard">게시물 관리</a>	
+		
+		<li><a href="#" onclick="loadSysBoard('','')">게시물 관리</a>
 			<ul class="sub_menu">
-				<li><a href="/master/sysMember">회원 관리</a></li>
-				<li><a href="/master/sysReply">댓글 관리</a></li>
+				<li><a href="#" onclick="loadSysMember('','')">회원 관리</a></li>
+				<li><a href="#" onclick="loadSysReply('','')">댓글 관리</a></li>
 				<li><a href="#" onclick="loadSysBoardCss()" >페이지 관리</a></li>
 			</ul></li>
 		<li><a href="#" onclick="loadSystemInfo()">시스템 정보</a></li>
@@ -140,7 +141,7 @@ function statsBoard(keyword){
         .catch(error => console.error('파일을 불러오는 도중 오류 발생:', error));
 	
 }
-const boardSearch = () => {
+/* const boardSearch = () => {
 	const keyword = document.querySelector('#keyword');
 	statsBoard(keyword.value);
 	//document.location.href='/master/sysMember?page=1&keyword=' + keyword.value;
@@ -150,7 +151,7 @@ const boardSearch = () => {
 const boardPress = () => {
 	if(event.keyCode == 13) boardSearch();
 }
-
+ */
 
 //***********************댓글 통계******************************
 function statsReply(keyword){
@@ -167,16 +168,7 @@ function statsReply(keyword){
         .catch(error => console.error('파일을 불러오는 도중 오류 발생:', error));
 	
 }
-const replySearch = () => {
-	const keyword = document.querySelector('#keyword');
-	statsReply(keyword.value);
-	//document.location.href='/master/sysMember?page=1&keyword=' + keyword.value;
-}
 
-
-const replyPress = () => {
-	if(event.keyCode == 13) replySearch();
-}
 
 //***********************회원 통계******************************
 function statsMember(keyword){
@@ -194,16 +186,7 @@ function statsMember(keyword){
 	
 }
 
-const memberSearch = () => {
-	const keyword = document.querySelector('#keyword');
-	statsMember(keyword.value);
-	//document.location.href='/master/sysMember?page=1&keyword=' + keyword.value;
-}
 
-
-const memberPress = () => {
-	if(event.keyCode == 13) memberSearch();
-}
 
 //전체 조회
 /* const goAll = () => {
@@ -320,6 +303,134 @@ const deleteFile = async () => {
 	})
 }
 
+
+
+//===================게시글 검색==================
+function loadSysBoard(page,keyword) {
+    // Fetch API를 사용하여 sysMember.html 파일 가져오기
+    fetch('/master/sysBoard?page='+page+'&keyword='+keyword)
+        .then(response => response.text())
+        .then(data => {
+            // 가져온 HTML 내용을 삽입할 요소 선택
+            const contentContainer = document.getElementById('content-container');
+            
+            // 삽입
+            contentContainer.innerHTML = data;
+        })
+        .catch(error => console.error('파일을 불러오는 도중 오류 발생:', error));
+}
+
+
+const boardSearchSys = () => {
+	const keyword = document.querySelector('#keyword');
+	//document.location.href='/master/sysBoard?page=1&keyword=' + keyword.value;
+	loadSysBoard('',keyword.value);
+}
+
+
+const boardPressSys = () => {
+	if(event.keyCode == 13) boardSearchSys();
+}
+
+const deleteBoard = async (seqno) => {
+	if(confirm('관리자 권한으로 게시물을 삭제하시겠습니까?') == true){
+		await fetch('/master/sysBoard?seqno='+seqno,{
+			method:'POST'
+		}).then((response) => response.json())
+		.then((data) => {
+			if(data.status === 'GOOD'){
+				alert('게시글이 삭제되었습니다.');
+				//document.location.href='/master/sysBoard';
+				loadSysBoard('','');
+			}else{
+				alert('시스템 장애로 실패하였습니다. else');
+			}
+		}).catch((error) => {alert('시스템 장애로 실패하였습니다. catch')})
+	}
+	else {
+		return false;
+	}
+	
+}
+
+
+////===================회원 검색==================
+
+function loadSysMember(page,keyword) {
+    // Fetch API를 사용하여 sysMember.html 파일 가져오기
+    fetch('/master/sysMember?page='+page+'&keyword='+keyword)
+        .then(response => response.text())
+        .then(data => {
+            // 가져온 HTML 내용을 삽입할 요소 선택
+            const contentContainer = document.getElementById('content-container');
+            
+            // 삽입
+            contentContainer.innerHTML = data;
+        })
+        .catch(error => console.error('파일을 불러오는 도중 오류 발생:', error));
+}
+
+const memberSearch = () => {
+	const keyword = document.querySelector('#keyword');
+	loadSysMember('',keyword.value);
+	//document.location.href='/master/sysMember?page=1&keyword=' + keyword.value;
+}
+
+
+const memberPress = () => {
+	if(event.keyCode == 13) memberSearch();
+}
+
+//===================댓글 검색==================
+function loadSysReply(page,keyword) {
+    // Fetch API를 사용하여 sysMember.html 파일 가져오기
+    fetch('/master/sysReply?page='+page+'&keyword='+keyword)
+        .then(response => response.text())
+        .then(data => {
+            // 가져온 HTML 내용을 삽입할 요소 선택
+            const contentContainer = document.getElementById('content-container');
+            
+            // 삽입
+            contentContainer.innerHTML = data;
+        })
+        .catch(error => console.error('파일을 불러오는 도중 오류 발생:', error));
+}
+
+
+const replySearch = () => {
+	const keyword = document.querySelector('#keyword');
+	loadSysReply('',keyword.value);
+	//document.location.href='/master/sysMember?page=1&keyword=' + keyword.value;
+}
+
+
+const replyPress = () => {
+	if(event.keyCode == 13) replySearch();
+}
+
+
+const deleteReply = async (replyseqno) => {
+	if(confirm('관리자 권한으로 댓글을 삭제하시겠습니까?') == true){
+		await fetch('/master/sysReply?replyseqno='+replyseqno,{
+			method:'POST'
+		}).then((response) => response.json())
+		.then((data) => {
+			console.log('wpqkf111111');
+			if(data.status === 'GOOD'){
+				
+				alert('게시글이 삭제되었습니다.');
+				//document.location.href='/master/sysReply';
+				loadSysReply('','');
+			}else{
+				alert('시스템 장애로 실패하였습니다. else');
+			}
+		}).catch((error) => {alert('시스템 장애로 실패하였습니다. catch')})
+	}
+	else {
+		return false;
+	}
+	
+}
 
 
 </script>

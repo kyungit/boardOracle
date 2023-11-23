@@ -24,7 +24,7 @@ const replyPress = () => {
 	if(event.keyCode == 13) replySearch();
 }
 
-const deleteReply = async (replyseqno) => {
+/* const deleteReply = async (replyseqno) => {
 	if(confirm('관리자 권한으로 댓글을 삭제하시겠습니까?') == true){
 		await fetch('/master/sysReply?replyseqno='+replyseqno,{
 			method:'POST'
@@ -45,7 +45,7 @@ const deleteReply = async (replyseqno) => {
 	}
 	
 }
-
+ */
 
 </script>
 <body>
@@ -54,8 +54,8 @@ const deleteReply = async (replyseqno) => {
         <h1 style="text-align: center;"> < 댓글 목록 > </h1>
         <span><h2>총 댓글 수는 [[${totalCount}]] 개 입니다.</h2></span>
         <div class="bottom_menu">
-          	<a href="/master/sysManager">시스템 관리 홈</a>&nbsp;&nbsp;
-          	<a href="/master/sysReply">전체 보기</a>&nbsp;&nbsp;
+          	<!-- <a href="/master/sysManager">시스템 관리 홈</a>&nbsp;&nbsp; -->
+          	<a href="#" onclick="loadSysReply('','')">전체 보기</a>&nbsp;&nbsp;
           
         </div>
 		<p style="color:red">댓글을 클릭 시, 해당 게시글과 댓글을 볼 수 있습니다.</p><br>

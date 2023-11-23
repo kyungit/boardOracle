@@ -376,11 +376,17 @@ public class MemberController {
 	@PostMapping("/member/searchPassword")
 	public String postSearchPassword(MemberDTO member) throws Exception{
 		//아이디 존재 여부 확인
-		if(service.idCheck(member.getUserid()) == 0)
-			return "{\"status\":\"ID_NOT_FOUND\"}";
-		//TELNO 확인
-		if(!service.memberInfo(member.getUserid()).getTelno().equals(member.getTelno()))
-			return "{\"status\":\"TELNO_NOT_FOUND\"}";
+//		if(service.idCheck(member.getUserid()) == 0)
+//			return "{\"status\":\"ID_NOT_FOUND\"}";
+//		//TELNO 확인
+//		if(!service.memberInfo(member.getUserid()).getTelno().equals(member.getTelno()))
+//			return "{\"status\":\"TELNO_NOT_FOUND\"}";
+//		
+		
+		if(service.searchPassword(member) == null) {
+			return "{\"status\":\"NOT_FOUND\"}";
+		}
+	
 		
 		//임시 패스워드 생성	
 		String rawTempPW = service.tempPasswordMaker();

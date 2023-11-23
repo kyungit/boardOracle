@@ -141,6 +141,12 @@ public class MemberServiceImpl implements MemberService {
 		
 	}
 
+	@Override
+	public MemberDTO searchPassword(MemberDTO member) {
+		// TODO Auto-generated method stub
+		return mapper.searchPassword(member);
+	}
+
 	
 	
 

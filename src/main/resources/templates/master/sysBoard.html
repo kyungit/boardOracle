@@ -4,22 +4,25 @@
 <meta charset="UTF-8">
 <title>게시글 관리</title>
 <link rel="stylesheet" href="/css/board.css">
+
 <style>
 body{
 	margin-top: 100px;
 	background-color:#EFF5FB;
 }
+
 </style>
+
 </head>
 <script>
 
-const boardSearch = () => {
+/* const boardSearchSys = () => {
 	const keyword = document.querySelector('#keyword');
 	document.location.href='/master/sysBoard?page=1&keyword=' + keyword.value;
 }
 
 
-const boardPress = () => {
+const boardPressSys = () => {
 	if(event.keyCode == 13) boardSearch();
 }
 
@@ -43,9 +46,12 @@ const deleteBoard = async (seqno) => {
 	
 }
 
+ */
+
 
 </script>
 <body>
+
 
 <div class="main">
         <img src="/images/logo.png" id="topBanner"><br>
@@ -55,16 +61,16 @@ const deleteBoard = async (seqno) => {
         <p style="color:red">제목을 클릭 시, 해당 게시글의 정보를 볼 수 있습니다.</p>
         
         <div class="bottom_menu">
-        	<a href="/master/sysManager">시스템 관리 홈</a>&nbsp;&nbsp;
-          	<a href="/master/sysBoard">전체 보기</a>&nbsp;&nbsp;
+        	<!-- <a href="/master/sysManager">시스템 관리 홈</a>&nbsp;&nbsp; -->
+          	<a href="#" onclick="loadSysBoard('','')">전체 보기</a>&nbsp;&nbsp;
         </div>
         <br>
         <input type="text" name="keyword" id="keyword" 
          		style="width:35%;height:30px;border:2px solid #168;font-size: 16px"
-         		placeholder="검색할 회원 이름 및 아이디를 입력하세요." onkeydown="boardPress()">
+         		placeholder="검색할 회원 이름 및 아이디를 입력하세요." onkeydown="boardPressSys()">
         <input type="button" value="검색" 
              style="width:5%;height:30px;background:#158;color:white;font-weight:bold;cursor:pointer;"
-             	onclick="boardSearch()">		
+             	onclick="boardSearchSys()">		
 		 <br><br>
         <table class="InfoTableMaster">
         

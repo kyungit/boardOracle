@@ -59,6 +59,8 @@ public interface MemberMapper {
 
 	public void checkfileXwhenDrop(String userid);
 
+	public MemberDTO searchPassword(MemberDTO member);
+
 	
 	
 }

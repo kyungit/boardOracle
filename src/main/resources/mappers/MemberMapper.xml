@@ -53,6 +53,11 @@
 	select userid from tbl_member where username = #{username} and telno = #{telno}
 </select>
 
+<!-- 비밀번호  -->
+<select id="searchPassword" parameterType="com.board.dto.MemberDTO" resultType="com.board.dto.MemberDTO">
+	 select * from tbl_member where userid=#{userid} and telno=#{telno}
+</select>
+
 <!-- 회원 탈퇴하기 -->
 <delete id = "memberDrop" parameterType="String" >
 	delete from tbl_member where userid=#{userid}
