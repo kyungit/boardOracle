@@ -109,6 +109,13 @@ body{
 <script>
 
 
+localStorage.setItem('state', 'A 페이지의 상태');
+
+var savedState = sessionStorage.getItem('state');
+if (savedState) {
+	console.log('hihi');
+}
+
 //***********************사용자 통계******************************
 
 function loadSysStats() {
@@ -238,10 +245,10 @@ const updateBoardSettings = async (postNumNow) => {
    
 	console.log(postNumNow);
 	console.log(postNum.value);
-    if (postNumNow === postNum.value) {
+    if (postNumNow == postNum.value) {
         alert('현재 설정값과 같습니다.');
     } else {
-        // 나머지 코드는 그대로 유지
+       
         await fetch(('/master/sysBoardCss'), {
             method: 'POST',
             body: formData
@@ -249,6 +256,7 @@ const updateBoardSettings = async (postNumNow) => {
             .then((data) => {
                 if (data.status === 'GOOD') {
                     alert('한 페이지에 보일 게시물 수가 ' + data.page + '로 변경되었습니다.');
+                    loadSysBoardCss();
                 }
             })
     }

@@ -55,9 +55,9 @@
 		</div>
 		<br>
 		<div class="bottom_menu">
-			<span style="color:red">관리 탭은 MASTER권한을 가진 사람만 접근할 수 있습니다.</span><br><br>
+			<span style="color:red">관리 탭에서 왔을 경우 아래 버튼으로 뒤로갈 수 있습니다.</span><br><br>
 			<th:block th:if="${session.role == 'MASTER'}">
-				<a href="/master/sysMember">회원 관리 페이지로 이동</a> &nbsp;&nbsp;
+				<a href="/master/sysManager">회원 관리 페이지로 이동</a> &nbsp;&nbsp;
 			</th:block>
 		</div>
 		

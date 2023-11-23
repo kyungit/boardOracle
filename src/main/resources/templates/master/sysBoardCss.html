@@ -61,7 +61,7 @@ input_field {
         <form id="postNumChange" class="ModifyForm">
             <label for="postNum">한 페이지에 보여질 게시물 수:</label>
             <input type="number" id="postNum" name="postNum" class="input_field" min="1" max="10" th:value='${postNumNow}'>
-            <button type="button" class="bottom_input" onclick="updateBoardSettings('[[${postNumNow}]]')">적용</button>
+            <button type="button" class="bottom_input" th:onclick="updateBoardSettings([[${postNumNow}]])">적용</button>
         </form>
         
         
