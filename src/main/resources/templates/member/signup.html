@@ -172,7 +172,14 @@ window.onload = () => {
 			description.focus();
 			return false;
 		}
-		
+		else {
+			var checkEmail = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
+		     if(!checkEmail.test(email.value)) {                            
+		    	 alert("이메일 형식이 잘못되었습니다");
+					email.focus();
+					return false;       
+		     }           
+		}
 		const formData = new FormData(RegistryForm);
 		
 		await fetch('/member/signup', {
@@ -294,8 +301,7 @@ const idCheck = async () => {
 			<input type="text" id="telno" class="input_field" name="telno" placeholder="전화번호를 입력하세요">
 			<input type="text" id="email" class="input_field" name="email" placeholder=" 이메일주소를 입력하세요">
 			<p style="color:red">일반 사용자 권한으로 등록됩니다.</p><br>
-			<textarea class="input_content" id="description" cols="100" rows="500" name="description" placeholder="자기 소개를 입력해 주세요">
-			</textarea><br>
+			<textarea class="input_content" id="description" cols="100" rows="500" name="description" placeholder="자기 소개를 입력해 주세요"></textarea><br>
 			<input type="button" id="btnRegister" class="btn_write" value="여기를 클릭하세요.">			
 		</form>
 		<br><br>

@@ -150,6 +150,7 @@ select * from (
 )
 where userid like '%'||#{keyword}||'%' or username like '%'||#{keyword}||'%'
 order by
+	seq asc,
     board desc,
     reply desc
 

@@ -64,7 +64,9 @@ a {text-decoration: none; cursor: hand;}
   display:inline;
 }
 </style>
+<script src="/js/getCookie.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+
 <script>
 
 /* 
@@ -139,11 +141,11 @@ const pwdLogout = () => {
 	            .then((data) => {
 	                if (data.pwStatus === 'Y') {
 	                    alert(data.username + '님.! 비밀번호를 변경한지 ' + data.pwcheck * 30 + '일 이상이 지났습니다. 비밀번호를 변경하여 주십시오');
-	                    childWindow = window.open(
-	                        "/member/pwCheckNotice?userid=" + data.userid,
-	                        "비밀번호 변경",
-	                        "width=950, height=540, top=50, left=50"
-	                    );
+	                    window.open(
+	    			       		"/member/pwCheckNotice?userid=" + data.userid,	
+	    			       		"비밀번호 변경",
+	    			       		"width=950, height=600, top=50, left=50"
+	    			       	);	
 	                } else if (data.message === 'GOOD') {
 	                    console.log('authkey = ' + data.authkey);
 	                    document.location.href = '/board/list?page=1';
@@ -203,7 +205,7 @@ const pwdLogout = () => {
 			       	window.open(
 			       		"/member/pwCheckNotice?userid=" + data.userid,	
 			       		"비밀번호 변경",
-			       		"width=950, height=540, top=50, left=50"
+			       		"width=950, height=600, top=50, left=50"
 			       	);	
 				}else if(data.message === 'GOOD'){
 					cookieManage(userid.value,password.value,data.authkey);

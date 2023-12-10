@@ -195,18 +195,22 @@ window.onload = () => {
 			addr2.focus();
 			return false;
 		}		
-		address.value = addr1.value + " " + addr2.value;
+		
 		 */
-		 
-		if(zipcode.value !== '' && addr2.value == ''){
+		if(zipcode.value === '' && addr1.value === '' && addr2.value ===''){
+			address.value = addressDB.value;
+		}
+		else if(zipcode.value === '' || addr1.value === '' || addr2.value ===''){
 			alert("상세 주소를 입력하세요");
 			addr2.focus();
 			return false;
+		}else{
+			address.value = addr1.value + " " + addr2.value;
+			console.log(address.value);
+			
 		}
+		 
 		
-		 if(zipcode.value !== '' && addr2.value !== ''){
-			 address.value = addr1.value + " " + addr2.value;
-		 }
 		 
 		 
 		if(telno.value == '') {
@@ -223,7 +227,14 @@ window.onload = () => {
 			email.focus();
 			return false;
 		}
-		//숙제 -- 이메일 유효성 검사 로직 만들기
+		else {
+			var checkEmail = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
+		     if(!checkEmail.test(email.value)) {                            
+		    	 alert("이메일 형식이 잘못되었습니다");
+					email.focus();
+					return false;       
+		     }           
+		}
 		
 		if(description.value == '') {
 			alert("자기소개를 입력하세요");
@@ -233,6 +244,7 @@ window.onload = () => {
 		
 		
 		const formData = new FormData(RegistryForm);
+		
 		
 /* 
         if (newFileSelected) {
@@ -372,14 +384,14 @@ const startupPage = () => {
 
 				<br>
 			</div>
-			<input type="text" id="address" name="address" class="input_field" th:value="${member.address}" readonly><br>
+			<input type="text" id="addressDB" name="addressDB" class="input_field" th:value="${member.address}" disabled><br>
 			<span style="color:red">주소 변경을 원하시면 검색해 주세요</span>
 			<input type="text" id="addrSearch" name="addrSearch" class="addrSearch" placeholder="주소를 검색합니다.">
 			<input type="button" id="btn_addSearch" class="btn_addrSearch" value="주소검색" onclick="searchAddr()">
 			<input type="text" id="zipcode" class="input_field" name="zipcode" placeholder="우편번호가 검색되어 입력됩니다." readonly>
 			<input type="text" id="addr1" class="input_field" name="addr1" placeholder="주소가 검색되어 입력됩니다." readonly>
 			<input type="text" id="addr2" class="input_field" name="addr2" placeholder="상세 주소를 입력하세요">
-			<input type="hidden" id="address" name="address">
+			<input type="hidden" id="address" name="address" th:value="${member.address}">
 			<input type="text" id="telno" class="input_field" name="telno" th:value="${member.telno}">
 			<input type="text" id="email" class="input_field" name="email" th:value="${member.email}">
 			

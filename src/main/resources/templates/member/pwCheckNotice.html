@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>패스워드 변경 여부 확인</title>
 <link rel="stylesheet" href="/css/board.css">
+
 <script src="/js/getCookie.js"></script>
 </head>
 <script>
@@ -43,7 +44,10 @@ const passwordUpdate = async() => {
 		.then((data) => {
 			if(data.message === 'GOOD'){
 				alert("패스워드가 변경되었습니다.");
-				
+				let authkey = getCookie('authkey');
+				if(authkey != undefined)
+					document.cookie = 'authkey=' + authkey + ";path=/;max-age=0";
+				window.opener.location.href='/member/login';
 				logout();
 			}else if(data.message === 'PASSWORD_NOT_FOUND'){
 				msg.innerHTML = '잘못된 패스워드를 입력했습니다.';
@@ -55,6 +59,7 @@ const passwordUpdate = async() => {
 		})
 	
 }
+
 
 const logout = async() => {
 	
@@ -75,7 +80,7 @@ const pwCheckUpdate = async () => {
 		if(data.status === 'GOOD'){
 			alert('30일 후에 알려드리겠습니다.');
 			window.close();
-			window.opener.location.href='/board/login';
+			window.opener.location.href='/member/login';
 		}
 	}).catch((error) => {console.log('error => ' + error)})
 	
@@ -102,8 +107,8 @@ const pwCheckUpdate = async () => {
 			<input type="password" id="new_password1" name="new_password1" 
 				class="input_field" placeholder="신규 패스워드를 한번 더 입력하세요">
 		</form>	
-		<input type="button" class="btn_write" value="30일 후에 변경" onclick="pwCheckUpdate()">
-		<input type="button" class="btn_cancel" value="지금 변경" onclick="passwordUpdate()">
+		<input type="button" class="btn_cancel" value="30일 후에 변경" onclick="pwCheckUpdate()">
+		<input type="button" class="btn_write" value="지금 변경" onclick="passwordUpdate()">
 	</div>
 
 </div>

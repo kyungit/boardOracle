@@ -30,8 +30,10 @@
 			<div class="field">성별 : [[${memberInfo.gender}]]</div>
 			<div class="field">직업 : [[${memberInfo.job}]]</div>
 			<div class="field">취미 : [[${memberInfo.hobby}]]</div>
+			<div class="field">주소 : [[${memberInfo.address}]]</div>
 			<div class="field">전화번호 : [[${memberInfo.telno}]]</div>
 			<div class="field">이메일 : [[${memberInfo.email}]]</div>
+			<div class="field">자기소개 : [[${memberInfo.description}]]</div>
 			<div class="field">가입 일자 : [[${memberInfo.regdate}]]</div>
 			<div class="field">최종 로그인 날짜 : [[${memberInfo.lastlogindate}]]</div>
 			<div class="field">최종 로그아웃 날짜 : [[${memberInfo.lastlogoutdate}]]</div>
@@ -55,13 +57,19 @@
 		</div>
 		<br>
 		<div class="bottom_menu">
-			<span style="color:red">관리 탭에서 왔을 경우 아래 버튼으로 뒤로갈 수 있습니다.</span><br><br>
+			
 			<th:block th:if="${session.role == 'MASTER'}">
-				<a href="/master/sysManager">회원 관리 페이지로 이동</a> &nbsp;&nbsp;
+			<span style="color:red">관리 탭에서 왔을 경우 아래 버튼으로 뒤로갈 수 있습니다.</span><br><br>
+				<a href="javascript:goBack()">뒤로가기</a> &nbsp;&nbsp;
 			</th:block>
 		</div>
 		
 	</div>
 	<br><br>
+	<script>
+		const goBaci = () => {
+			document.href="history.back()";
+		}
+	</script>
 </body>
 </html>

@@ -413,7 +413,7 @@ const goBack = () => {
       		<th:block th:if="${pre_seqno != 0}">
                 <a th:href="@{'/board/view?seqno=' + ${pre_seqno} + '&page=' + ${page} + '&keyword=' + ${keyword}}">이전 ▼</a>&nbsp;&nbsp;
 			</th:block>
-			<a href="/board/list?page=1" >홈으로</a> &nbsp;&nbsp;
+			<a th:href="@{'/board/list?page='+${page}+ '&keyword=' + ${keyword}}" >홈으로</a> &nbsp;&nbsp;
  			<th:block th:if="${next_seqno != 0}">	
                <a th:href="@{'/board/view?seqno=' + ${next_seqno} + '&page=' + ${page} + '&keyword=' + ${keyword}}">다음 ▲</a>&nbsp;&nbsp;
  			</th:block>
@@ -427,7 +427,7 @@ const goBack = () => {
         <div class="bottom_menu">
        	<th:block th:if="${session.role == 'MASTER'}">
 			<span style="color:red"> 관리 탭에서 왔을 경우 아래 버튼으로 뒤로갈 수 있습니다. </span><br>
-				<a href="/master/sysManager"  class="bottom_menu">뒤로가기</a> &nbsp;&nbsp;
+				<a href="javascript:goBack()"  class="bottom_menu">뒤로가기</a> &nbsp;&nbsp;
 				
 			</th:block>  
         </div>

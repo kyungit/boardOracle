@@ -184,7 +184,7 @@ public class BoardController {
 		
 		rs.setContentType("application/octet-stream");
 		rs.setContentLength(fileByte.length);
-		rs.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(org_filename,"UTF-8") + "\";");
+		rs.setHeader("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(org_filename,"UTF-8") + "\";");
 		rs.getOutputStream().write(fileByte);
 		rs.getOutputStream().flush();
 		rs.getOutputStream().close();		

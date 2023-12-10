@@ -68,7 +68,7 @@ const deleteFile = async () => {
 	                   	</a>
 	                </td> -->
 	               <td th:text="${file.org_filename}"></td>
-	                <td th:text="${file.filesize}"></td>	                	
+	                <td>[[${file.filesize}]]Byte</td>	                	
 	                <td th:text="${file.userid}"></td>
 	            </tr>
 			</th:block>

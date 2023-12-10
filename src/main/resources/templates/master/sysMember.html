@@ -27,7 +27,7 @@ const memberPress = () => {
 <body>
 <div class="main">
         <img src="/images/logo.png" id="topBanner"><br>
-        <h1 style="text-align: center;"> < 회원 목록 > </h1>
+        <h1 style="text-align: center;"> < 회원 관리 > </h1>
         <span><h1>총 회원 수는 [[${totalElement}]] 명 입니다.</h1></span>
 	        
         <div class="bottom_menu">
@@ -37,10 +37,10 @@ const memberPress = () => {
         <p style="color:red">아이디를 클릭 시, 해당 회원의 정보를 볼 수 있습니다.</p><br>
         <input type="text" name="keyword" id="keyword" 
          		style="width:35%;height:30px;border:2px solid #168;font-size: 16px"
-         		placeholder="검색할 회원 이름 및 아이디를 입력하세요." onkeydown="memberPress()">
+         		placeholder="검색할 회원 이름 및 아이디를 입력하세요." onkeydown="memberPressSys()">
         <input type="button" value="검색" 
              style="width:5%;height:30px;background:#158;color:white;font-weight:bold;cursor:pointer;"
-             	onclick="memberSearch()">		
+             	onclick="memberSearchSys()">		
 		 <br><br>
         <table class="InfoTableMaster">
         

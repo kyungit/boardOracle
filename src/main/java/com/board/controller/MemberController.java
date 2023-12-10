@@ -48,12 +48,13 @@ public class MemberController {
 	@ResponseBody
 	@PostMapping("/member/login")
 	public String postLogin(MemberDTO member,HttpSession session,@RequestParam("autologin") String autologin) {
-		
+		System.out.println("로그인 = " + autologin);
 		String authkey = "";
 		
 	    
 		String pwStatus = "N";
-		System.out.println("로그인 컨트롤러");
+		System.out.println("로그인 컨트롤러 autologin = " + autologin);
+		
 		//로그인 시 authkey 생성  
 		if(autologin.equals("NEW")) {
 			authkey = UUID.randomUUID().toString().replaceAll("-", "");
@@ -71,7 +72,7 @@ public class MemberController {
 				//System.out.println("lastpwdate컨트롤러 : " + service.memberInfo(member.getUserid()).getLastpwdate());
 				
 			
-				 LocalDate lastpwdate = memberInfo.getLastpwdate();
+				LocalDate lastpwdate = memberInfo.getLastpwdate();
 				 int pwCheck = memberInfo.getPwcheck();
 				 LocalDate after30 = lastpwdate.plusDays(pwCheck * 30);
 				 System.out.println("pwStatus1 = " + pwStatus);
@@ -238,7 +239,7 @@ public class MemberController {
 		MemberDTO memberDB = service.memberInfo(userid);
 		
 		
-		
+		System.out.println(member.getAddress());
 		memberDB.setGender(member.getGender());
 		memberDB.setHobby(member.getHobby());
 		memberDB.setJob(member.getJob());

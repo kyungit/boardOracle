@@ -19,16 +19,16 @@ body{
         <span><h2>총 댓글 수는 [[${totalElement}]] 개 입니다.</h2></span>
        	
 		<div class="bottom_menu">
-          	<a href="/master/sysReply">댓글 관리</a>&nbsp;&nbsp;
+          	<!-- <a href="/master/sysReply">댓글 관리</a>&nbsp;&nbsp; -->
          	<a href="#" onclick="statsReply('')">전체보기</a>&nbsp;&nbsp;
         </div>
         <br>
         <input type="text" name="keyword" id="keyword" 
          		style="width:35%;height:30px;border:2px solid #168;font-size: 16px"
-         		placeholder="검색할 회원 이름 및 아이디를 입력하세요." onkeydown="replyPress()">
+         		placeholder="검색할 회원 이름 및 아이디를 입력하세요." onkeydown="replyPressStats()">
         <input type="button" value="검색" 
              style="width:5%;height:30px;background:#158;color:white;font-weight:bold;cursor:pointer;"
-             	onclick="replySearch()">	
+             	onclick="replySearchStats()">	
         
        
 		 <br><br>
